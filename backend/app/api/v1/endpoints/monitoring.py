@@ -8,6 +8,14 @@ from app.services.risk_engine import risk_engine
 
 router = APIRouter()
 
+@router.get("/macro-indicators")
+def get_macro_indicators():
+    """
+    Fetches official macroeconomic indicators directly from Federal Reserve Economic Data (FRED).
+    """
+    from app.services.data_service import market_data_service
+    return market_data_service.fetch_fred_macro_indicators()
+
 class SimulateMarketChangeRequest(BaseModel):
     simulated_risk: float = Field(default=0.081, description="Simulate market risk rising (e.g. 8.1%)")
     simulated_drawdown: float = Field(default=0.065, description="Simulate market drawdown")

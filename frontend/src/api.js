@@ -85,3 +85,15 @@ export async function fetchDecisionHistory(portfolioId) {
   if (!res.ok) throw new Error("Failed to fetch decision history");
   return await res.json();
 }
+
+export async function fetchMacroIndicators() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/monitoring/macro-indicators`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("FRED macro fetch warning:", err);
+    return null;
+  }
+}
+

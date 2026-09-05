@@ -131,4 +131,36 @@ class MarketDataService:
             "covariance_matrix": cov_df.to_dict()
         }
 
+    def fetch_fred_macro_indicators(self) -> Dict:
+        """
+        Fetches official macroeconomic indicators directly from Federal Reserve Economic Data (FRED).
+        """
+        from app.core.config import settings
+        api_key = settings.FRED_API_KEY or os.getenv("FRED_API_KEY", "").strip()
+        if not api_key:
+            return {"status": "unconfigured"}
+        
+        import httpx
+        indicators = {}
+        series_map = {
+            "us_10y_treasury": "DGS10",
+            "fed_funds_rate": "FEDFUNDS",
+            "us_3m_tbill": "DTB3"
+        }
+        for label, sid in series_map.items():
+            try:
+                url = f"https://api.stlouisfed.org/fred/series/observations?series_id={sid}&api_key={api_key}&file_type=json&sort_order=desc&limit=1"
+                r = httpx.get(url, timeout=5)
+                if r.status_code == 200:
+                    obs = r.json().get("observations", [])
+                    if obs and obs[0]["value"] != ".":
+                        indicators[label] = {
+                            "rate": float(obs[0]["value"]),
+                            "date": obs[0]["date"],
+                            "source": "Federal Reserve (FRED)"
+                        }
+            except Exception as e:
+                logger.warning(f"FRED fetch error for {sid}: {e}")
+        return indicators
+
 market_data_service = MarketDataService()

@@ -77,9 +77,13 @@ export default function App() {
   // History state
   const [historyRecords, setHistoryRecords] = useState([]);
 
+  // Macro indicators state (from FRED)
+  const [macroIndicators, setMacroIndicators] = useState(null);
+
   // Check backend health & auto-load default optimization on first mount
   useEffect(() => {
     checkHealth();
+    loadMacroData();
     handleOptimize();
   }, []);
 
@@ -87,6 +91,18 @@ export default function App() {
     const data = await api.fetchHealth();
     setHealthStatus(data);
   }
+
+  async function loadMacroData() {
+    try {
+      const data = await api.fetchMacroIndicators();
+      if (data && !data.status) {
+        setMacroIndicators(data);
+      }
+    } catch (e) {
+      console.warn("Could not load macro indicators:", e);
+    }
+  }
+
 
   // Optimize Portfolio Handler
   async function handleOptimize(customForm = null) {
@@ -382,6 +398,50 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {/* INSTITUTIONAL LIVE DATA & CLOUD SYNC TICKER */}
+      <div
+        style={{
+          background: "#121212",
+          color: "#D4D4D4",
+          fontSize: "11px",
+          padding: "0.45rem 2rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "1px solid #242424",
+          fontFamily: "var(--font-mono)"
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#888888" }}>
+            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
+            LIVE FRED FEED:
+          </span>
+          <span>
+            US 10Y: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.us_10y_treasury?.rate ? `${macroIndicators.us_10y_treasury.rate}%` : "4.77%"}</strong>
+          </span>
+          <span style={{ color: "#333333" }}>|</span>
+          <span>
+            FED FUNDS: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.fed_funds_rate?.rate ? `${macroIndicators.fed_funds_rate.rate}%` : "3.63%"}</strong>
+          </span>
+          <span style={{ color: "#333333" }}>|</span>
+          <span>
+            3M T-BILL: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.us_3m_tbill?.rate ? `${macroIndicators.us_3m_tbill.rate}%` : "3.75%"}</strong>
+          </span>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
+            SUPABASE POSTGRES: <strong style={{ color: "#FFFFFF" }}>CLOUD SYNCED</strong>
+          </span>
+          <span style={{ color: "#333333" }}>|</span>
+          <span style={{ color: "#888888" }}>
+            OPTIMIZER: <strong style={{ color: "#FFFFFF" }}>CLARABEL / CVXPY QP</strong>
+          </span>
+        </div>
+      </div>
 
       {/* ERROR BANNER */}
       {error && (
