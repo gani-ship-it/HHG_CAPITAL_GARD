@@ -89,93 +89,271 @@ button, input, select, textarea {
   animation: pulseBorder 2s infinite ease-in-out;
 }
 
-/* Layout container */
+/* Layout container: Institutional Desktop Shell */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Fixed Institutional Left Sidebar (250px) */
+.app-sidebar {
+  width: 250px;
+  background: #111111;
+  color: #EDEDED;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #242424;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 40;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.sidebar-header {
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid #222222;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sidebar-logo {
+  width: 32px;
+  height: 32px;
+  background: #FFFFFF;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: -0.04em;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-brand-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.sidebar-brand-sub {
+  font-size: 10px;
+  color: #888888;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 0.75rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar-section-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666666;
+  padding: 0.5rem 0.5rem 0.25rem;
+  font-weight: 600;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: #A3A3A3;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.sidebar-nav-item:hover {
+  background: #1C1C1C;
+  color: #FFFFFF;
+}
+
+.sidebar-nav-item.active {
+  background: #222222;
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 #FFFFFF;
+}
+
+.sidebar-nav-label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sidebar-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+}
+
+.sidebar-badge-breach {
+  background: #DC2626;
+  color: #FFFFFF;
+  animation: pulseBorder 1.8s infinite;
+}
+
+.sidebar-badge-count {
+  background: #2E2E2E;
+  color: #CCCCCC;
+}
+
+.sidebar-footer {
+  padding: 0.85rem;
+  border-top: 1px solid #222222;
+  background: #0C0C0C;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.sidebar-user-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.65rem;
+  background: #1A1A1A;
+  border: 1px solid #2B2B2B;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  color: #EDEDED;
+}
+
+.sidebar-user-pill:hover {
+  background: #242424;
+  border-color: #383838;
+}
+
+.sidebar-telemetry {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: #777777;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0 0.25rem;
+}
+
+/* Main Application Stage */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Top Telemetry & Control Bar */
+.top-telemetry-bar {
+  background: #111111;
+  color: #D4D4D4;
+  border-bottom: 1px solid #222222;
+  padding: 0.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+/* Persistent Full-Width Risk Status Banner */
+.risk-banner {
+  width: 100%;
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  font-size: 13px;
+  border-bottom: 1px solid;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  z-index: 25;
+}
+
+.risk-banner-safe {
+  background: #F4FBF7;
+  border-color: #C6E8D2;
+  color: #166534;
+}
+
+.risk-banner-breach {
+  background: #FEF2F2;
+  border-color: #F87171;
+  border-bottom: 2px solid #DC2626;
+  color: #991B1B;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);
+}
+
+.risk-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.risk-banner-title {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.risk-banner-desc {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.risk-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Legacy compatibility classes */
 .app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Institutional Header */
 .top-nav {
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 0 2rem;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.brand-section {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.brand-logo {
-  width: 28px;
-  height: 28px;
-  background: var(--text-primary);
-  color: var(--text-inverted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  border-radius: var(--radius-sm);
-  letter-spacing: -0.05em;
-}
-
-.brand-title {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-}
-
-.brand-subtitle {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Nav Tabs */
-.nav-tabs {
-  display: flex;
-  gap: 0.25rem;
-  height: 100%;
-}
-
-.nav-tab {
-  height: 100%;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s ease;
-}
-
-.nav-tab:hover {
-  color: var(--text-primary);
-  background-color: var(--bg-hover);
-}
-
-.nav-tab.active {
-  color: var(--text-primary);
-  border-bottom-color: var(--text-primary);
-  font-weight: 600;
+  display: none;
 }
 
 /* Cards & Surfaces */

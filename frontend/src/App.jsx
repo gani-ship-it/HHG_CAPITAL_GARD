@@ -343,264 +343,364 @@ export default function App() {
   const isAlert = portfolio?.status === "ALERT" || monitoringMetrics?.status === "ALERT";
 
   return (
-    <div className="app-container">
-      {/* 1. TOP INSTITUTIONAL NAVIGATION */}
-      <header className="top-nav">
-        <div className="brand-section">
-          <div className="brand-logo">CG</div>
-          <div>
-            <h1 className="brand-title">CAPITAL GUARD</h1>
-            <p className="brand-subtitle">Institutional Capital Optimization & Risk Control</p>
+    <div className="app-shell">
+      {/* ====================================================
+          1. INSTITUTIONAL LEFT SIDEBAR (250px)
+         ==================================================== */}
+      <aside className="app-sidebar">
+        <div>
+          {/* Brand Header */}
+          <div className="sidebar-header">
+            <div className="sidebar-logo">CG</div>
+            <div>
+              <h1 className="sidebar-brand-title">CAPITAL GUARD</h1>
+              <p className="sidebar-brand-sub">Apex Reserve Bank</p>
+            </div>
           </div>
-        </div>
 
-        {/* Navigation Tabs */}
-        <nav className="nav-tabs">
-          <button
-            className={`nav-tab ${activeTab === "overview" ? "active" : ""}`}
-            onClick={() => setActiveTab("overview")}
-          >
-            <PieIcon size={16} /> Overview
-          </button>
-          <button
-            className={`nav-tab ${activeTab === "setup" ? "active" : ""}`}
-            onClick={() => setActiveTab("setup")}
-          >
-            <Sliders size={16} /> Optimization Setup
-          </button>
-          <button
-            className={`nav-tab ${activeTab === "monitoring" ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab("monitoring");
-              refreshMonitoring();
-            }}
-          >
-            <Activity size={16} /> Risk Monitoring
-          </button>
-          <button
-            className={`nav-tab ${activeTab === "rebalance" ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab("rebalance");
-              handleEvaluateRebalance();
-            }}
-          >
-            <RefreshCw size={16} /> Rebalance Engine
-          </button>
-          <button
-            className={`nav-tab ${activeTab === "simulator" ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab("simulator");
-              handleRunStressTest();
-            }}
-          >
-            <Zap size={16} /> Stress Simulator
-          </button>
-          <button
-            className={`nav-tab ${activeTab === "history" ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab("history");
-              loadHistory();
-            }}
-          >
-            <FileText size={16} /> Audit History
-          </button>
-        </nav>
+          {/* Navigation Items */}
+          <nav className="sidebar-nav">
+            <div className="sidebar-section-title">Institutional Modules</div>
 
-        {/* Status Pill & Preset Button */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          {/* User Profile / Supabase Auth Button */}
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => setIsAuthModalOpen(true)}
-            title="Supabase Authentication & Role Switcher"
-            style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}
-          >
-            <User size={13} />
-            <span style={{ maxWidth: "120px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {currentUser?.user_metadata?.full_name || currentUser?.email || "Sign In"}
-            </span>
-            <span
-              style={{
-                fontSize: "10px",
-                background: "#E5E5E5",
-                color: "#111111",
-                padding: "1px 5px",
-                borderRadius: "2px",
-                fontWeight: 600
+            <button
+              className={`sidebar-nav-item ${activeTab === "overview" ? "active" : ""}`}
+              onClick={() => setActiveTab("overview")}
+            >
+              <span className="sidebar-nav-label">
+                <PieIcon size={16} /> Overview
+              </span>
+            </button>
+
+            <button
+              className={`sidebar-nav-item ${activeTab === "setup" ? "active" : ""}`}
+              onClick={() => setActiveTab("setup")}
+            >
+              <span className="sidebar-nav-label">
+                <Sliders size={16} /> Optimization Setup
+              </span>
+            </button>
+
+            <button
+              className={`sidebar-nav-item ${activeTab === "monitoring" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("monitoring");
+                refreshMonitoring();
               }}
             >
-              {currentUser?.user_metadata?.role ? currentUser.user_metadata.role.split(" ")[0] : "Auth"}
-            </span>
-          </button>
+              <span className="sidebar-nav-label">
+                <Activity size={16} /> Risk Monitoring
+              </span>
+            </button>
 
-          {/* AI Copilot Trigger Button */}
-          <button
+            <button
+              className={`sidebar-nav-item ${activeTab === "rebalance" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("rebalance");
+                handleEvaluateRebalance();
+              }}
+            >
+              <span className="sidebar-nav-label">
+                <RefreshCw size={16} /> Rebalance Engine
+              </span>
+              {isAlert && (
+                <span className="sidebar-badge sidebar-badge-breach" title="Risk limit breach detected">
+                  BREACH
+                </span>
+              )}
+            </button>
 
-            className="btn btn-secondary btn-sm"
-            onClick={() => setIsCopilotOpen(true)}
-            title="Open Capital Guard AI Copilot (Groq LPU Llama 3.3 70B & Air-Gapped Engine)"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.45rem",
-              background: "#111111",
-              color: "#FFFFFF",
-              border: "1px solid #333333"
-            }}
+            <button
+              className={`sidebar-nav-item ${activeTab === "simulator" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("simulator");
+                handleRunStressTest();
+              }}
+            >
+              <span className="sidebar-nav-label">
+                <Zap size={16} /> Stress Simulator
+              </span>
+            </button>
+
+            <button
+              className={`sidebar-nav-item ${activeTab === "history" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("history");
+                loadHistory();
+              }}
+            >
+              <span className="sidebar-nav-label">
+                <FileText size={16} /> Audit History
+              </span>
+              {historyRecords.length > 0 && (
+                <span className="sidebar-badge sidebar-badge-count">
+                  {historyRecords.length}
+                </span>
+              )}
+            </button>
+          </nav>
+        </div>
+
+        {/* Sidebar Footer: User Identity & Engine Telemetry */}
+        <div className="sidebar-footer">
+          {/* User Persona Button */}
+          <div
+            className="sidebar-user-pill"
+            onClick={() => setIsAuthModalOpen(true)}
+            title="Switch User Persona or Sign In (Supabase Auth)"
           >
-            <Sparkles size={13} color="#60A5FA" />
-            <span>AI Copilot</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", overflow: "hidden" }}>
+              <User size={14} color="#A3A3A3" />
+              <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <div style={{ fontSize: "12px", fontWeight: 600, color: "#EDEDED", lineHeight: 1.2 }}>
+                  {currentUser?.user_metadata?.full_name || currentUser?.email || "Chief Risk Officer"}
+                </div>
+                <div style={{ fontSize: "10px", color: "#888888" }}>
+                  {currentUser?.user_metadata?.role || "Chief Risk Officer"}
+                </div>
+              </div>
+            </div>
             <span
               style={{
                 fontSize: "9px",
-                background: "#2563EB",
-                color: "#FFFFFF",
-                padding: "1px 5px",
-                borderRadius: "3px",
+                background: "#2A2A2A",
+                color: "#D4D4D4",
+                padding: "2px 5px",
+                borderRadius: "2px",
+                fontFamily: "var(--font-mono)",
                 fontWeight: 600
               }}
             >
-              Groq
+              {currentUser?.user_metadata?.role ? currentUser.user_metadata.role.split(" ")[0] : "AUTH"}
             </span>
-          </button>
+          </div>
 
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={loadDemoPreset}
-            title="Pre-fills ₹100 Cr Bank Demo Scenario"
-          >
-            <RotateCcw size={13} /> ₹100 Cr Bank Demo
-          </button>
+          {/* Engine Telemetry */}
+          <div className="sidebar-telemetry">
+            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+              <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
+              <span>SOLVER: Clarabel / CVXPY QP (22ms)</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+              <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
+              <span>CLOUD: Supabase Synced</span>
+            </div>
+          </div>
+        </div>
+      </aside>
 
+      {/* ====================================================
+          2. MAIN APPLICATION CONTENT AREA
+         ==================================================== */}
+      <div className="app-main">
+        {/* Top Telemetry & Control Bar */}
+        <header className="top-telemetry-bar">
+          <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
+            <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#888888" }}>
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
+              LIVE FRED FEED:
+            </span>
+            <span>
+              US 10Y: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.us_10y_treasury?.rate ? `${macroIndicators.us_10y_treasury.rate}%` : "4.77%"}</strong>
+            </span>
+            <span style={{ color: "#333333" }}>|</span>
+            <span>
+              FED FUNDS: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.fed_funds_rate?.rate ? `${macroIndicators.fed_funds_rate.rate}%` : "3.63%"}</strong>
+            </span>
+            <span style={{ color: "#333333" }}>|</span>
+            <span>
+              3M T-BILL: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.us_3m_tbill?.rate ? `${macroIndicators.us_3m_tbill.rate}%` : "3.75%"}</strong>
+            </span>
+          </div>
 
-          <div className={`badge ${isAlert ? "badge-alert alert-pulse" : "badge-safe"}`}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
+            {/* AI Copilot Trigger */}
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => setIsCopilotOpen(true)}
+              title="Open Capital Guard AI Copilot (Groq LPU Llama 3.3 70B)"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.45rem",
+                background: "#1E1E1E",
+                color: "#FFFFFF",
+                borderColor: "#333333"
+              }}
+            >
+              <Sparkles size={13} color="#60A5FA" />
+              <span>AI Copilot</span>
+              <span
+                style={{
+                  fontSize: "9px",
+                  background: "#2563EB",
+                  color: "#FFFFFF",
+                  padding: "1px 5px",
+                  borderRadius: "3px",
+                  fontWeight: 700
+                }}
+              >
+                Groq
+              </span>
+            </button>
+
+            {/* ₹100 Cr Bank Demo Preset */}
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={loadDemoPreset}
+              title="Pre-fills ₹100 Cr Bank Demo Scenario"
+              style={{ background: "#1E1E1E", color: "#EDEDED", borderColor: "#333333" }}
+            >
+              <RotateCcw size={13} /> ₹100 Cr Bank Demo
+            </button>
+
+            {/* Status Badge */}
+            <div className={`badge ${isAlert ? "badge-alert alert-pulse" : "badge-safe"}`}>
+              {isAlert ? (
+                <>
+                  <ShieldAlert size={14} /> 🔴 RISK BREACH
+                </>
+              ) : (
+                <>
+                  <ShieldCheck size={14} /> 🟢 SAFE (COMPLIANT)
+                </>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* PERSISTENT FULL-WIDTH RISK STATUS BANNER */}
+        <div className={`risk-banner ${isAlert ? "risk-banner-breach" : "risk-banner-safe"}`}>
+          <div className="risk-banner-content">
             {isAlert ? (
               <>
-                <ShieldAlert size={14} /> 🔴 RISK BREACH DETECTED
+                <ShieldAlert size={20} color="#DC2626" style={{ flexShrink: 0 }} />
+                <div>
+                  <div className="risk-banner-title">
+                    <span>CRITICAL RISK BREACH DETECTED</span>
+                  </div>
+                  <div className="risk-banner-desc">
+                    Portfolio volatility is <strong>{(portfolio?.current_risk ? (portfolio.current_risk * 100).toFixed(2) : "8.10")}%</strong>, crossing the policy maximum of <strong>{(((portfolio?.max_risk_limit || 0.07) * 100).toFixed(1))}%</strong> (+{((portfolio?.current_risk || 0.081) * 100 - (portfolio?.max_risk_limit || 0.07) * 100).toFixed(2)}% breach). Immediate capital realignment recommended.
+                  </div>
+                </div>
               </>
             ) : (
               <>
-                <ShieldCheck size={14} /> 🟢 SAFE (COMPLIANT)
+                <ShieldCheck size={20} color="#16A34A" style={{ flexShrink: 0 }} />
+                <div>
+                  <div className="risk-banner-title" style={{ color: "#166534" }}>
+                    <span>PORTFOLIO WITHIN POLICY LIMITS</span>
+                  </div>
+                  <div className="risk-banner-desc" style={{ color: "#15803D" }}>
+                    All regulatory volatility caps ({(((portfolio?.max_risk_limit || 0.07) * 100).toFixed(1))}%) and liquidity floors ({formatCurrency(portfolio?.min_liquidity || 200000000)}) are strictly satisfied under current market conditions.
+                  </div>
+                </div>
               </>
             )}
           </div>
-        </div>
-      </header>
 
-      {/* INSTITUTIONAL LIVE DATA & CLOUD SYNC TICKER */}
-      <div
-        style={{
-          background: "#121212",
-          color: "#D4D4D4",
-          fontSize: "11px",
-          padding: "0.45rem 2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          borderBottom: "1px solid #242424",
-          fontFamily: "var(--font-mono)"
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-          <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#888888" }}>
-            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
-            LIVE FRED FEED:
-          </span>
-          <span>
-            US 10Y: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.us_10y_treasury?.rate ? `${macroIndicators.us_10y_treasury.rate}%` : "4.77%"}</strong>
-          </span>
-          <span style={{ color: "#333333" }}>|</span>
-          <span>
-            FED FUNDS: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.fed_funds_rate?.rate ? `${macroIndicators.fed_funds_rate.rate}%` : "3.63%"}</strong>
-          </span>
-          <span style={{ color: "#333333" }}>|</span>
-          <span>
-            3M T-BILL: <strong style={{ color: "#FFFFFF" }}>{macroIndicators?.us_3m_tbill?.rate ? `${macroIndicators.us_3m_tbill.rate}%` : "3.75%"}</strong>
-          </span>
+          <div className="risk-banner-actions">
+            {isAlert ? (
+              <>
+                <button
+                  className="btn btn-sm btn-danger"
+                  onClick={() => {
+                    setActiveTab("rebalance");
+                    handleEvaluateRebalance();
+                  }}
+                  style={{ gap: "0.35rem" }}
+                >
+                  <RefreshCw size={13} /> Review Rebalance Engine ➔
+                </button>
+                <button
+                  className="btn btn-sm btn-secondary"
+                  onClick={() => {
+                    setActiveTab("simulator");
+                    handleRunStressTest();
+                  }}
+                  style={{ gap: "0.35rem", background: "#FFFFFF" }}
+                >
+                  <Zap size={13} /> Run Stress Simulator
+                </button>
+              </>
+            ) : (
+              <span className="badge badge-safe" style={{ background: "#DCFCE7", color: "#166534", border: "1px solid #86EFAC" }}>
+                ✓ MANDATE COMPLIANT
+              </span>
+            )}
+          </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
-          <span style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-            <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
-            SUPABASE POSTGRES: <strong style={{ color: "#FFFFFF" }}>CLOUD SYNCED</strong>
-          </span>
-          <span style={{ color: "#333333" }}>|</span>
-          <span style={{ color: "#888888" }}>
-            OPTIMIZER: <strong style={{ color: "#FFFFFF" }}>CLARABEL / CVXPY QP</strong>
-          </span>
-        </div>
-      </div>
+        {/* ERROR BANNER */}
+        {error && (
+          <div
+            style={{
+              background: "var(--accent-alert-bg)",
+              color: "var(--accent-alert)",
+              padding: "0.75rem 2rem",
+              fontSize: "13px",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              borderBottom: "1px solid var(--accent-alert-border)"
+            }}
+          >
+            <AlertCircle size={16} />
+            <span>{error}</span>
+          </div>
+        )}
 
-      {/* ERROR BANNER */}
-      {error && (
+        {/* SUB-HEADER: PORTFOLIO QUICK SUMMARY */}
         <div
           style={{
-            background: "var(--accent-alert-bg)",
-            color: "var(--accent-alert)",
-            padding: "0.75rem 2rem",
-            fontSize: "13px",
+            background: "var(--bg-primary)",
+            borderBottom: "1px solid var(--border-subtle)",
+            padding: "0.85rem 2rem",
             display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            borderBottom: "1px solid var(--accent-alert-border)"
+            justifyContent: "space-between",
+            alignItems: "center"
           }}
         >
-          <AlertCircle size={16} />
-          <span>{error}</span>
-        </div>
-      )}
+          <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+            <div>
+              <span style={{ fontSize: "11px", color: "var(--text-muted)", textTransform: "uppercase" }}>
+                Institution
+              </span>
+              <p style={{ fontWeight: 600, fontSize: "14px" }}>
+                {portfolio?.org_name || "Apex Reserve Bank"} ({portfolio?.org_type || "Bank"})
+              </p>
+            </div>
+            <div style={{ width: "1px", height: "26px", background: "var(--border-subtle)" }} />
+            <div>
+              <span style={{ fontSize: "11px", color: "var(--text-muted)", textTransform: "uppercase" }}>
+                Allocated Capital
+              </span>
+              <p className="mono" style={{ fontWeight: 600, fontSize: "15px" }}>
+                {formatCurrency(portfolio?.total_capital || formData.total_capital)}
+              </p>
+            </div>
+            <div style={{ width: "1px", height: "26px", background: "var(--border-subtle)" }} />
+            <div>
+              <span style={{ fontSize: "11px", color: "var(--text-muted)", textTransform: "uppercase" }}>
+                Horizon & Mandate
+              </span>
+              <p style={{ fontWeight: 500, fontSize: "13px" }}>
+                {portfolio?.investment_horizon_years || 3} Years · {portfolio?.investment_objective || "Balanced Growth"}
+              </p>
+            </div>
+          </div>
 
-      {/* 2. SUB-HEADER: PORTFOLIO QUICK SUMMARY */}
-      <div
-        style={{
-          background: "var(--bg-primary)",
-          borderBottom: "1px solid var(--border-subtle)",
-          padding: "1rem 2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}
-      >
-        <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-          <div>
-            <span style={{ fontSize: "11px", color: "var(--text-muted)", textTransform: "uppercase" }}>
-              Institution
-            </span>
-            <p style={{ fontWeight: 600, fontSize: "14px" }}>
-              {portfolio?.org_name || "Apex Reserve Bank"} ({portfolio?.org_type || "Bank"})
-            </p>
-          </div>
-          <div style={{ width: "1px", height: "30px", background: "var(--border-subtle)" }} />
-          <div>
-            <span style={{ fontSize: "11px", color: "var(--text-muted)", textTransform: "uppercase" }}>
-              Allocated Capital
-            </span>
-            <p className="mono" style={{ fontWeight: 600, fontSize: "15px" }}>
-              {formatCurrency(portfolio?.total_capital || formData.total_capital)}
-            </p>
-          </div>
-          <div style={{ width: "1px", height: "30px", background: "var(--border-subtle)" }} />
-          <div>
-            <span style={{ fontSize: "11px", color: "var(--text-muted)", textTransform: "uppercase" }}>
-              Horizon & Mandate
-            </span>
-            <p style={{ fontWeight: 500, fontSize: "13px" }}>
-              {portfolio?.investment_horizon_years || 3} Years · {portfolio?.investment_objective || "Balanced Growth"}
-            </p>
+          {/* Quick Demo Action: Simulate Market Volatility */}
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button
+              className={`btn btn-sm ${isAlert ? "btn-secondary" : "btn-danger"}`}
+              onClick={handleSimulateMarketSpike}
+              disabled={loading}
+              title="Demonstrates real-time risk spike for judges"
+            >
+              <Activity size={14} /> {isAlert ? "Reset Market Volatility" : "Simulate Market Shock (Risk 6.2% → 8.1%)"}
+            </button>
           </div>
         </div>
-
-        {/* Quick Demo Action: Simulate Market Volatility */}
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <button
-            className={`btn btn-sm ${isAlert ? "btn-secondary" : "btn-danger"}`}
-            onClick={handleSimulateMarketSpike}
-            disabled={loading}
-          >
-            <Activity size={14} /> Simulate Market Shock (Risk 6.2% → 8.1%)
-          </button>
-        </div>
-      </div>
 
       {/* 3. MAIN TAB CONTENT */}
       <main style={{ flex: 1, padding: "2rem", maxWidth: "1400px", margin: "0 auto", width: "100%" }}>
@@ -1509,6 +1609,7 @@ export default function App() {
           Groq
         </span>
       </button>
+      </div>
     </div>
   );
 }
