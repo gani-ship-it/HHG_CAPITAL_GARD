@@ -97,3 +97,46 @@ export async function fetchMacroIndicators() {
   }
 }
 
+export async function fetchCopilotStatus() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/copilot/status`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("Copilot status fetch warning:", err);
+    return null;
+  }
+}
+
+export async function sendCopilotMessage(message, portfolioId = null) {
+  const res = await fetch(`${API_BASE_URL}/copilot/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message, portfolio_id: portfolioId })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Failed to query Copilot" }));
+    throw new Error(err.detail || "Copilot inference error");
+  }
+  return await res.json();
+}
+
+export async function fetchCopilotHistory(portfolioId = null) {
+  const url = portfolioId
+    ? `${API_BASE_URL}/copilot/history?portfolio_id=${portfolioId}`
+    : `${API_BASE_URL}/copilot/history`;
+  const res = await fetch(url);
+  if (!res.ok) return { messages: [] };
+  return await res.json();
+}
+
+export async function clearCopilotHistory(portfolioId = null) {
+  const url = portfolioId
+    ? `${API_BASE_URL}/copilot/history?portfolio_id=${portfolioId}`
+    : `${API_BASE_URL}/copilot/history`;
+  const res = await fetch(url, { method: "DELETE" });
+  if (!res.ok) throw new Error("Failed to clear history");
+  return await res.json();
+}
+
+

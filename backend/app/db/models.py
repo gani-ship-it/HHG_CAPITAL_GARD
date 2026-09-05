@@ -108,3 +108,25 @@ class MarketCache(Base):
     symbol = Column(String(50), unique=True, index=True, nullable=False)
     data_json = Column(Text, nullable=False) # Serialized price time-series & metrics
     last_updated = Column(DateTime, default=datetime.utcnow)
+
+
+class ChatMessage(Base):
+    __tablename__ = "chat_messages"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    portfolio_id = Column(Integer, ForeignKey("portfolios.id"), nullable=True)
+    role = Column(String(20), nullable=False) # "user" or "assistant"
+    content = Column(Text, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    model = Column(String(50), default="groq/llama-3.3-70b-versatile")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "portfolio_id": self.portfolio_id,
+            "role": self.role,
+            "content": self.content,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "model": self.model
+        }
+

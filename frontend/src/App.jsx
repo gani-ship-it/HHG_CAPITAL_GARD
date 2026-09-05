@@ -18,9 +18,13 @@ import {
   Download,
   User,
   LogIn,
-  LogOut
+  LogOut,
+  Sparkles,
+  Bot
 } from "lucide-react";
 import AuthModal from "./components/AuthModal";
+import AICopilotDrawer from "./components/AICopilotDrawer";
+
 
 import {
   PieChart,
@@ -104,6 +108,7 @@ export default function App() {
     }
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isCopilotOpen, setIsCopilotOpen] = useState(false);
 
   // Check backend health & auto-load default optimization on first mount
 
@@ -428,6 +433,37 @@ export default function App() {
             </span>
           </button>
 
+          {/* AI Copilot Trigger Button */}
+          <button
+
+            className="btn btn-secondary btn-sm"
+            onClick={() => setIsCopilotOpen(true)}
+            title="Open Capital Guard AI Copilot (Groq LPU Llama 3.3 70B & Air-Gapped Engine)"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.45rem",
+              background: "#111111",
+              color: "#FFFFFF",
+              border: "1px solid #333333"
+            }}
+          >
+            <Sparkles size={13} color="#60A5FA" />
+            <span>AI Copilot</span>
+            <span
+              style={{
+                fontSize: "9px",
+                background: "#2563EB",
+                color: "#FFFFFF",
+                padding: "1px 5px",
+                borderRadius: "3px",
+                fontWeight: 600
+              }}
+            >
+              Groq
+            </span>
+          </button>
+
           <button
             className="btn btn-secondary btn-sm"
             onClick={loadDemoPreset}
@@ -435,6 +471,7 @@ export default function App() {
           >
             <RotateCcw size={13} /> ₹100 Cr Bank Demo
           </button>
+
 
           <div className={`badge ${isAlert ? "badge-alert alert-pulse" : "badge-safe"}`}>
             {isAlert ? (
@@ -1415,7 +1452,65 @@ export default function App() {
         }}
         currentUser={currentUser}
       />
+
+      {/* CAPITAL GUARD AI COPILOT DRAWER */}
+      <AICopilotDrawer
+        isOpen={isCopilotOpen}
+        onClose={() => setIsCopilotOpen(false)}
+        portfolio={portfolio}
+        macroIndicators={macroIndicators}
+      />
+
+      {/* FLOATING COPILOT LAUNCHER BUTTON */}
+      <button
+        onClick={() => setIsCopilotOpen(true)}
+        title="Open Capital Guard AI Copilot (Groq LPU Llama 3.3 70B)"
+        style={{
+          position: "fixed",
+          bottom: "1.75rem",
+          right: "1.75rem",
+          zIndex: 890,
+          background: "#111111",
+          color: "#FFFFFF",
+          border: "1px solid #333333",
+          borderRadius: "32px",
+          padding: "0.65rem 1.15rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.55rem",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.35)",
+          cursor: "pointer",
+          fontWeight: 600,
+          fontSize: "12px",
+          letterSpacing: "0.3px",
+          transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)"
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.05)";
+          e.currentTarget.style.background = "#000000";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1.0)";
+          e.currentTarget.style.background = "#111111";
+        }}
+      >
+        <Sparkles size={15} color="#60A5FA" />
+        <span>Ask AI Copilot</span>
+        <span
+          style={{
+            fontSize: "9px",
+            background: "#2563EB",
+            color: "#FFFFFF",
+            padding: "1px 5px",
+            borderRadius: "3px",
+            fontWeight: 700
+          }}
+        >
+          Groq
+        </span>
+      </button>
     </div>
   );
 }
+
 

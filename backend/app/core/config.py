@@ -21,8 +21,9 @@ class Settings(BaseSettings):
     # Database URL (fallback to local SQLite if empty or not Postgres)
     DATABASE_URL: str = "sqlite:///./capital_guard.db"
 
-    # Financial Data
+    # Financial Data & AI APIs
     FRED_API_KEY: str = ""
+    GROQ_API_KEY: str = ""
     ENABLE_DATA_CACHE: bool = True
     CACHE_EXPIRY_HOURS: int = 24
 
