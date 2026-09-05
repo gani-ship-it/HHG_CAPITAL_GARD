@@ -15,8 +15,13 @@ import {
   Layers,
   ArrowRight,
   DollarSign,
-  Download
+  Download,
+  User,
+  LogIn,
+  LogOut
 } from "lucide-react";
+import AuthModal from "./components/AuthModal";
+
 import {
   PieChart,
   Pie,
@@ -80,7 +85,28 @@ export default function App() {
   // Macro indicators state (from FRED)
   const [macroIndicators, setMacroIndicators] = useState(null);
 
+  // Supabase Authentication state
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("capital_guard_user");
+      return saved ? JSON.parse(saved) : {
+        id: "demo-cro",
+        email: "cro@apexbank.com",
+        user_metadata: {
+          full_name: "Dr. Elena Vance, CRO",
+          org_name: "Apex Reserve Bank",
+          role: "Chief Risk Officer"
+        },
+        isDemo: true
+      };
+    } catch (e) {
+      return null;
+    }
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   // Check backend health & auto-load default optimization on first mount
+
   useEffect(() => {
     checkHealth();
     loadMacroData();
@@ -376,7 +402,32 @@ export default function App() {
         </nav>
 
         {/* Status Pill & Preset Button */}
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          {/* User Profile / Supabase Auth Button */}
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => setIsAuthModalOpen(true)}
+            title="Supabase Authentication & Role Switcher"
+            style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}
+          >
+            <User size={13} />
+            <span style={{ maxWidth: "120px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {currentUser?.user_metadata?.full_name || currentUser?.email || "Sign In"}
+            </span>
+            <span
+              style={{
+                fontSize: "10px",
+                background: "#E5E5E5",
+                color: "#111111",
+                padding: "1px 5px",
+                borderRadius: "2px",
+                fontWeight: 600
+              }}
+            >
+              {currentUser?.user_metadata?.role ? currentUser.user_metadata.role.split(" ")[0] : "Auth"}
+            </span>
+          </button>
+
           <button
             className="btn btn-secondary btn-sm"
             onClick={loadDemoPreset}
@@ -1348,6 +1399,23 @@ export default function App() {
         <div>Capital Optimization & Risk Control Platform · Enterprise Decision System</div>
         <div className="mono">API: http://127.0.0.1:8000 (FastAPI + CVXPY)</div>
       </footer>
+
+      {/* SUPABASE AUTHENTICATION MODAL */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthSuccess={(user) => {
+          setCurrentUser(user);
+          if (user?.user_metadata?.org_name) {
+            setFormData(prev => ({
+              ...prev,
+              org_name: user.user_metadata.org_name
+            }));
+          }
+        }}
+        currentUser={currentUser}
+      />
     </div>
   );
 }
+
