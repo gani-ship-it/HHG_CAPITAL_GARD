@@ -1,0 +1,14 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+python-dotenv>=1.0.1
+sqlalchemy>=2.0.28
+psycopg2-binary>=2.9.9
+supabase>=2.3.4
+cvxpy>=1.4.2
+numpy>=1.26.4
+pandas>=2.2.1
+scipy>=1.12.0
+yfinance>=0.2.37
+httpx>=0.27.0
