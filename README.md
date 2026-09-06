@@ -322,21 +322,81 @@ Follow this sequence to evaluate the complete financial lifecycle:
 ## 🧮 Mathematical & Financial Formulations
 
 ### 1. Convex Quadratic Programming (Mean-Variance QP)
-$$\min_{w} \quad \frac{1}{2} w^T \Sigma w - q \cdot \mu^T w$$
-Subject to:
-* $\sum_{i=1}^n w_i = 1 \quad \text{(Full Investment)}$
-* $w_i \ge 0 \quad \forall i \quad \text{(Long-Only Non-Negativity)}$
-* $w_{\text{Cash}} + w_{\text{GovBonds}} \ge \text{LCR}_{\min} \quad \text{(Basel III High-Quality Liquid Assets Floor)}$
-* $w_{\text{Equity}} \le \text{Cap}_{\text{Equity}}, \quad w_{\text{CorpBonds}} \le \text{Cap}_{\text{CorpBonds}} \quad \text{(Concentration Ceilings)}$
+
+The institutional asset allocation engine solves a constrained convex Quadratic Program (QP) using the **Clarabel / OSQP** conic interior-point solver:
+
+$$
+\min_{\mathbf{w}} \quad \frac{1}{2} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - q \cdot \boldsymbol{\mu}^T \mathbf{w}
+$$
+
+**Subject to institutional constraints:**
+
+$$
+\begin{aligned}
+\sum_{i=1}^n w_i &= 1 && \text{-- Full Investment Constraint} \\
+w_i &\ge 0, \quad \forall i \in \{1, \dots, n\} && \text{-- Long-Only Non-Negativity} \\
+w_{\text{Cash}} + w_{\text{GovBonds}} &\ge \text{LCR}_{\min} && \text{-- Basel III Liquidity Coverage Ratio (HQLA Floor)} \\
+w_{\text{Equity}} &\le \text{Cap}_{\text{Equity}} && \text{-- Equity Market Concentration Ceiling} \\
+w_{\text{CorpBonds}} &\le \text{Cap}_{\text{CorpBonds}} && \text{-- Corporate Credit Exposure Ceiling}
+\end{aligned}
+$$
+
+* **$\mathbf{w} \in \mathbb{R}^n$**: Portfolio asset allocation weights vector
+* **$\mathbf{\Sigma} \in \mathbb{R}^{n \times n}$**: Empirical covariance matrix of asset returns
+* **$\boldsymbol{\mu} \in \mathbb{R}^n$**: Expected annual asset return vector
+* **$q \ge 0$**: Risk-tolerance parameter ($q = 0.5$ for balanced institutional mandates)
+* **$\text{LCR}_{\min}$**: Minimum High-Quality Liquid Assets reserve ratio under Basel III
+
+---
 
 ### 2. Non-Parametric Historical Value at Risk (95% 1-Day VaR)
-$$\text{VaR}_{0.95} = -\text{Quantile}_{0.05}(R_{\text{portfolio}}) \times \text{Capital}$$
-Where $R_{\text{portfolio}} = \sum_{i} w_i r_i$ is the empirical daily return series over 250 trading days, avoiding naive Gaussian distribution assumptions.
+
+Calculates the maximum expected one-day loss at a 95% statistical confidence level using empirical historical return distributions rather than assuming a naive Gaussian normal distribution:
+
+$$
+\text{VaR}_{0.95} = -\text{Quantile}_{0.05}\left(R_{\text{portfolio}}\right) \times \text{Capital}
+$$
+
+Where the portfolio historical daily return series across the 250-trading-day lookback window is defined as:
+
+$$
+R_{\text{portfolio}, t} = \sum_{i=1}^n w_i \cdot r_{i, t}, \quad \forall t \in \{1, \dots, 250\}
+$$
+
+**Conditional Value at Risk ($\text{CVaR}_{0.95}$ / Expected Shortfall):**  
+Quantifies tail risk conditional on exceeding the 95% VaR threshold:
+
+$$
+\text{CVaR}_{0.95} = -\mathbb{E}\left[ R_{\text{portfolio}} \;\middle|\; R_{\text{portfolio}} \le -\text{VaR}_{0.95} \right] \times \text{Capital}
+$$
+
+---
 
 ### 3. Frictional Rebalancing Decision Condition
-$$\text{Turnover} = \frac{1}{2} \sum_{i=1}^n |w_{i, \text{target}} - w_{i, \text{current}}|$$
-$$\text{Transaction Cost} = \text{Turnover} \times \text{Capital} \times \frac{\text{Cost}_{\text{bps}}}{10,000}$$
-$$\text{Verdict} = \begin{cases} \text{\textbf{REBALANCE}}, & \text{if } (\sigma_{\text{current}} - \sigma_{\text{target}}) \times \text{Capital} \times \lambda > \text{Transaction Cost} \\ \text{\textbf{HOLD}}, & \text{otherwise (Acknowledge breach without capital churn)} \end{cases}$$
+
+To protect institutional capital from unnecessary turnover fee drag, trades are executed only when the risk reduction utility strictly exceeds execution friction:
+
+**1. Portfolio Turnover:**
+
+$$
+\text{Turnover} = \frac{1}{2} \sum_{i=1}^n \left| w_{i, \text{target}} - w_{i, \text{current}} \right|
+$$
+
+**2. Transaction Execution Cost:**
+
+$$
+\text{Cost}_{\text{trade}} = \text{Turnover} \times \text{Capital} \times \frac{\text{Cost}_{\text{bps}}}{10{,}000}
+$$
+
+**3. Execution Verdict Decision Rule:**
+
+$$
+\text{Verdict} = 
+\begin{cases} 
+\mathbf{REBALANCE}, & \text{if } (\sigma_{\text{current}} - \sigma_{\text{target}}) \times \text{Capital} \times \lambda > \text{Cost}_{\text{trade}} \\[10pt]
+\mathbf{HOLD}, & \text{otherwise (Acknowledge breach without capital churn)}
+\end{cases}
+$$
 
 ---
 
