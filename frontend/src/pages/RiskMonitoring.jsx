@@ -14,7 +14,10 @@ export default function RiskMonitoring() {
     triggerMarketShock,
     resetMarketShock,
     setActiveTab,
-    loading
+    loading,
+    isLiveStreaming,
+    setIsLiveStreaming,
+    lastTickTime
   } = usePortfolio();
 
   if (!portfolio) {
@@ -39,9 +42,9 @@ export default function RiskMonitoring() {
   const healthScore = calculateHealthScore(portfolio, monitoringMetrics);
   const currentRisk = monitoringMetrics?.current_risk ?? portfolio.expected_risk ?? 0.048;
   const riskLimit   = monitoringMetrics?.risk_limit ?? portfolio.max_risk_limit ?? 0.07;
-  const var95       = portfolio.var_95 || currentRisk * 0.58;
-  const cvar95      = var95 * 1.25;
-  const liqRatio    = monitoringMetrics?.liquidity_ratio ?? 0.20;
+  const var95       = monitoringMetrics?.var_95 ?? (currentRisk * 0.58);
+  const cvar95      = monitoringMetrics?.cvar_95 ?? (var95 * 1.25);
+  const liqRatio    = monitoringMetrics?.liquidity_ratio ?? (portfolio.min_liquidity ? portfolio.min_liquidity / portfolio.total_capital : 0.20);
 
   /* Small inline stat ─────────────────────── */
   const RiskStat = ({ label, value, subValue, isDanger, isNeutral }) => (
@@ -70,7 +73,7 @@ export default function RiskMonitoring() {
         paddingBottom: 24, borderBottom: "1px solid #EAEAEA"
       }}>
         <div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
             <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", color: "#111111" }}>
               Live Risk Telemetry
             </h1>
@@ -88,14 +91,50 @@ export default function RiskMonitoring() {
             }}>
               {isBreach ? "MANDATE BREACH" : "MANDATE COMPLIANT"}
             </span>
+
+            {/* Live Streaming Indicator Pill */}
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "3px 8px",
+                borderRadius: 12,
+                background: isLiveStreaming ? "#F0FDF4" : "#F4F4F5",
+                border: `1px solid ${isLiveStreaming ? "#BBF7D0" : "#E4E4E7"}`,
+                fontSize: 10,
+                fontFamily: "var(--font-mono)",
+                color: isLiveStreaming ? "#15803D" : "#71717A"
+              }}
+            >
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: isLiveStreaming ? "#22C55E" : "#A1A1AA",
+                  display: "inline-block"
+                }}
+              />
+              <span>{isLiveStreaming ? `FEED ACTIVE · ${lastTickTime || "SYNCED"}` : "FEED PAUSED"}</span>
+            </div>
           </div>
           <p style={{ fontSize: 12, color: "#666666", marginTop: 4 }}>
-            Real-time parametric VaR, stress variance tracking, and market shock simulation.
+            Continuous intraday volatility drift, 95% Historical VaR tracking, and macroeconomic shock simulation.
           </p>
         </div>
 
-        {/* Shock controls */}
-        <div style={{ display: "flex", gap: 8 }}>
+        {/* Shock & Stream controls */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button
+            onClick={() => setIsLiveStreaming(!isLiveStreaming)}
+            className="cg-btn-secondary"
+            style={{ fontSize: 11, padding: "6px 11px" }}
+            title="Pause or resume live market drift stream"
+          >
+            {isLiveStreaming ? "Pause Stream" : "Resume Stream"}
+          </button>
+
           {isBreach ? (
             <>
               <button onClick={() => resetMarketShock()} disabled={loading} className="cg-btn-secondary" style={{ fontSize: 12 }}>

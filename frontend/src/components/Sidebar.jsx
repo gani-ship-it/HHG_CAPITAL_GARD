@@ -232,9 +232,23 @@ export default function Sidebar() {
                       flexShrink: 0,
                       marginLeft: 4,
                       background: item.isBreach && riskStatus === "BREACH" ? "#D32F2F" : "#111111",
-                      color: "#FFFFFF"
+                      color: "#FFFFFF",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4
                     }}
                   >
+                    {item.badge === "LIVE" && (
+                      <span
+                        style={{
+                          width: 4,
+                          height: 4,
+                          borderRadius: "50%",
+                          background: "#22C55E",
+                          display: "inline-block"
+                        }}
+                      />
+                    )}
                     {item.badge}
                   </span>
                 )}

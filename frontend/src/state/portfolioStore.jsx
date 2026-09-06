@@ -35,6 +35,10 @@ export function PortfolioProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Live Streaming Telemetry State
+  const [isLiveStreaming, setIsLiveStreaming] = useState(true);
+  const [lastTickTime, setLastTickTime] = useState(() => new Date().toLocaleTimeString());
+
   // User Authentication State — null means unauthenticated
   const [currentUser, setCurrentUser] = useState(() => {
     try {
@@ -124,6 +128,45 @@ export function PortfolioProvider({ children }) {
       console.warn("Failed to refresh monitoring:", err);
     }
   }, [portfolio?.id]);
+
+  // Real-Time Live Market Ticker Drift Engine (every 3.5s)
+  useEffect(() => {
+    if (!isLiveStreaming || !portfolio || riskStatus === "BREACH") return;
+
+    const interval = setInterval(() => {
+      const now = new Date().toLocaleTimeString();
+      setLastTickTime(now);
+
+      setMonitoringMetrics((prev) => {
+        if (!prev) return prev;
+        const baseRisk = portfolio.current_risk || portfolio.expected_risk || 0.062;
+        // Intraday micro-fluctuation drift of ±0.03% (±3 bps)
+        const drift = (Math.random() - 0.5) * 0.0006;
+        const newRisk = Math.max(0.015, Math.min(0.12, (prev.current_risk || baseRisk) + drift));
+        const limit = prev.risk_limit || portfolio.max_risk_limit || 0.07;
+        const breached = newRisk > limit;
+
+        if (breached && riskStatus !== "BREACH") {
+          setRiskStatus("BREACH");
+          setActiveAlert({
+            type: "RISK_LIMIT_BREACH",
+            message: `Live volatility drift exceeded statutory limit (${(newRisk * 100).toFixed(2)}% > ${(limit * 100).toFixed(2)}%)`,
+            timestamp: new Date().toISOString()
+          });
+        }
+
+        return {
+          ...prev,
+          current_risk: newRisk,
+          var_95: newRisk * 0.58,
+          cvar_95: newRisk * 0.76,
+          last_tick: now
+        };
+      });
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isLiveStreaming, portfolio, riskStatus]);
 
   // Load Audit History
   const loadHistory = useCallback(async (pId) => {
@@ -395,6 +438,11 @@ export function PortfolioProvider({ children }) {
     setIsAuthModalOpen,
     currentUser,
     setCurrentUser,
+
+    // Live Streaming
+    isLiveStreaming,
+    setIsLiveStreaming,
+    lastTickTime,
 
     // Actions
     startSetup,
