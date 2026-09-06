@@ -71,11 +71,21 @@ def simulate_market_change(
     portfolio.status = "ALERT" if is_breached else "SAFE"
     db.commit()
 
+    weights = json.loads(portfolio.current_weights_json or "{}")
+    metrics = risk_engine.evaluate_portfolio_risk(
+        weights=weights,
+        total_capital=portfolio.total_capital,
+        max_risk_limit=portfolio.max_risk_limit
+    )
+    metrics["current_risk"] = req.simulated_risk
+    metrics["status"] = "BREACH" if is_breached else "SAFE"
+
     return {
         "portfolio_id": portfolio.id,
         "simulated_risk": req.simulated_risk,
         "max_risk_limit": portfolio.max_risk_limit,
         "status": portfolio.status,
         "is_breached": is_breached,
+        "metrics": metrics,
         "alert_message": f"🔴 Risk Breach Detected: Allowed Risk {portfolio.max_risk_limit*100:.1f}% vs Actual {req.simulated_risk*100:.1f}%" if is_breached else "🟢 SAFE"
     }

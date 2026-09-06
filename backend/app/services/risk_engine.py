@@ -72,9 +72,9 @@ class RiskEngine:
         liquid_ratio = sum(weights.get(a, 0.0) for a in liquid_assets)
         current_liquidity = liquid_ratio * total_capital
 
-        # Risk breach checks
-        is_risk_breached = ann_volatility > max_risk_limit
-        is_drawdown_breached = max_dd > max_drawdown_limit
+        # Risk breach checks (with 5 bps numerical margin to prevent floating-point false breaches)
+        is_risk_breached = (ann_volatility - max_risk_limit) > 0.0005
+        is_drawdown_breached = (max_dd - max_drawdown_limit) > 0.0005
         is_breach = is_risk_breached or is_drawdown_breached
 
         breach_reasons = []

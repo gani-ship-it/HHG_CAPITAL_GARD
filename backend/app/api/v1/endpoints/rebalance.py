@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -22,6 +23,8 @@ class RebalanceExecutionRequest(BaseModel):
     risk_aversion_factor: float = Field(default=2.0)
     partial_ratio: float = Field(default=1.0)
     trigger: str = Field(default="VaR / Volatility limit breach")
+    is_guest: bool = Field(default=False, description="True if guest session; skips writing to DecisionHistory database table")
+    user_email: Optional[str] = Field(default=None)
 
 @router.post("/evaluate")
 def evaluate_rebalance(req: RebalanceEvaluationRequest, db: Session = Depends(get_db)):
@@ -71,7 +74,7 @@ def execute_rebalance(req: RebalanceExecutionRequest, db: Session = Depends(get_
     Executes the rebalancing decision:
     1. Updates portfolio weights & risk
     2. Resets status to SAFE
-    3. Persists an immutable record to DecisionHistory for full auditability
+    3. Persists an immutable record to DecisionHistory for full auditability (SKIPPED FOR GUESTS)
     """
     portfolio = db.query(Portfolio).filter(Portfolio.id == req.portfolio_id).first()
     if not portfolio:
@@ -104,37 +107,70 @@ def execute_rebalance(req: RebalanceExecutionRequest, db: Session = Depends(get_
 
     decision_type = evaluation["decision"]
 
-    # Save to Decision History
-    history_record = DecisionHistory(
-        portfolio_id=portfolio.id,
-        timestamp=datetime.utcnow(),
-        trigger=req.trigger,
-        w_current_json=json.dumps(w_current),
-        w_target_json=json.dumps(evaluation["w_target"]),
-        turnover=evaluation["turnover"],
-        transaction_cost=evaluation["transaction_cost"],
-        risk_reduction_value=evaluation["risk_reduction_value"],
-        decision=decision_type,
-        portfolio_risk_before=portfolio.current_risk,
-        portfolio_risk_after=evaluation["risk_target"] if decision_type == "REBALANCE" else portfolio.current_risk,
-        explanation=evaluation["explanation"]
-    )
-    db.add(history_record)
+    history_record_dict = {
+        "id": "guest-ephemeral" if req.is_guest else None,
+        "portfolio_id": portfolio.id,
+        "user_email": req.user_email or portfolio.user_email,
+        "timestamp": datetime.utcnow().isoformat(),
+        "trigger": req.trigger,
+        "w_current": w_current,
+        "w_target": evaluation["w_target"],
+        "turnover": evaluation["turnover"],
+        "transaction_cost": evaluation["transaction_cost"],
+        "risk_reduction_value": evaluation["risk_reduction_value"],
+        "decision": decision_type,
+        "portfolio_risk_before": portfolio.current_risk,
+        "portfolio_risk_after": evaluation["risk_target"] if decision_type == "REBALANCE" else portfolio.current_risk,
+        "explanation": evaluation["explanation"] + (" [GUEST MODE - NOT COMMITTED TO DB]" if req.is_guest else "")
+    }
 
-    # If REBALANCE approved, update the active portfolio
-    if decision_type == "REBALANCE":
-        portfolio.current_weights_json = json.dumps(evaluation["w_target"])
-        portfolio.current_risk = evaluation["risk_target"]
-        portfolio.expected_return = reopt["expected_return"]
-        portfolio.health_score = reopt["health_score"]
-        portfolio.status = "SAFE"
-    
-    db.commit()
-    db.refresh(history_record)
+    # Save to Decision History ONLY for registered accounts
+    if not req.is_guest:
+        history_record = DecisionHistory(
+            portfolio_id=portfolio.id,
+            user_email=req.user_email or portfolio.user_email,
+            timestamp=datetime.utcnow(),
+            trigger=req.trigger,
+            w_current_json=json.dumps(w_current),
+            w_target_json=json.dumps(evaluation["w_target"]),
+            turnover=evaluation["turnover"],
+            transaction_cost=evaluation["transaction_cost"],
+            risk_reduction_value=evaluation["risk_reduction_value"],
+            decision=decision_type,
+            portfolio_risk_before=portfolio.current_risk,
+            portfolio_risk_after=evaluation["risk_target"] if decision_type == "REBALANCE" else portfolio.current_risk,
+            explanation=evaluation["explanation"]
+        )
+        db.add(history_record)
+
+        # If REBALANCE approved, update the active portfolio in database
+        if decision_type == "REBALANCE":
+            portfolio.current_weights_json = json.dumps(evaluation["w_target"])
+            portfolio.current_risk = evaluation["risk_target"]
+            portfolio.expected_return = reopt["expected_return"]
+            portfolio.health_score = reopt["health_score"]
+            portfolio.status = "SAFE"
+        
+        db.commit()
+        db.refresh(history_record)
+        history_record_dict = history_record.to_dict()
+        portfolio_dict = portfolio.to_dict()
+    else:
+        # For guest mode: do NOT commit changes to DB. Rollback transaction!
+        db.rollback()
+        portfolio_dict = {
+            **portfolio.to_dict(),
+            "current_weights": evaluation["w_target"] if decision_type == "REBALANCE" else w_current,
+            "allocations": evaluation["w_target"] if decision_type == "REBALANCE" else w_current,
+            "current_risk": evaluation["risk_target"] if decision_type == "REBALANCE" else portfolio.current_risk,
+            "expected_risk": evaluation["risk_target"] if decision_type == "REBALANCE" else portfolio.current_risk,
+            "status": "SAFE" if decision_type == "REBALANCE" else portfolio.status
+        }
 
     return {
         "status": "success",
         "action_taken": decision_type,
-        "history_record": history_record.to_dict(),
-        "updated_portfolio": portfolio.to_dict()
+        "is_guest": req.is_guest,
+        "history_record": history_record_dict,
+        "updated_portfolio": portfolio_dict
     }

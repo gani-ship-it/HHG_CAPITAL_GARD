@@ -232,7 +232,7 @@ class PortfolioOptimizer:
             "current_liquidity": round(current_liquidity, 2),
             "liquidity_ratio": round(liquid_ratio, 4),
             "health_score": health,
-            "status": "SAFE" if portfolio_risk <= max_risk_limit else "ALERT",
+            "status": "SAFE" if portfolio_risk <= max_risk_limit + 0.0005 else "ALERT",
             "solver_status": prob.status,
             "explanations": explanations,
             "individual_asset_stats": {

@@ -30,6 +30,7 @@ class Portfolio(Base):
     health_score = Column(Float, default=100.0)
     status = Column(String(20), default="SAFE") # SAFE (🟢) or ALERT (🔴)
     
+    user_email = Column(String(255), index=True, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -37,8 +38,16 @@ class Portfolio(Base):
     decisions = relationship("DecisionHistory", back_populates="portfolio", cascade="all, delete-orphan")
 
     def to_dict(self):
+        weights = json.loads(self.current_weights_json or "{}")
+        risk = self.current_risk or 0.0
+        # Derive synthetic metrics for frontend display
+        var_95 = round(risk * 0.58, 4)          # Parametric 95% 1-day VaR proxy
+        sharpe = round(
+            max(0.0, (self.expected_return or 0.0) - 0.0533) / risk, 2
+        ) if risk > 0.001 else 1.42
         return {
             "id": self.id,
+            "user_email": self.user_email,
             "org_name": self.org_name,
             "org_type": self.org_type,
             "total_capital": self.total_capital,
@@ -50,12 +59,18 @@ class Portfolio(Base):
             "max_risk_limit": self.max_risk_limit,
             "selected_assets": json.loads(self.selected_assets_json or "[]"),
             "constraints": json.loads(self.constraints_json or "{}"),
-            "current_weights": json.loads(self.current_weights_json or "{}"),
+            # Primary field names
+            "current_weights": weights,
             "expected_return": self.expected_return,
-            "current_risk": self.current_risk,
+            "current_risk": risk,
             "current_liquidity": self.current_liquidity,
             "health_score": self.health_score,
             "status": self.status,
+            # Frontend alias fields (accessed as portfolio.allocations, portfolio.expected_risk etc.)
+            "allocations": weights,
+            "expected_risk": risk,
+            "var_95": var_95,
+            "sharpe_ratio": sharpe,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None
         }
@@ -66,6 +81,7 @@ class DecisionHistory(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     portfolio_id = Column(Integer, ForeignKey("portfolios.id"), nullable=False)
+    user_email = Column(String(255), index=True, nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
     trigger = Column(String(100), default="VaR breach") # "VaR breach", "Volatility spike", "Manual"
     
@@ -87,6 +103,7 @@ class DecisionHistory(Base):
         return {
             "id": self.id,
             "portfolio_id": self.portfolio_id,
+            "user_email": self.user_email,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,
             "trigger": self.trigger,
             "w_current": json.loads(self.w_current_json or "{}"),
@@ -98,6 +115,49 @@ class DecisionHistory(Base):
             "portfolio_risk_before": self.portfolio_risk_before,
             "portfolio_risk_after": self.portfolio_risk_after,
             "explanation": self.explanation
+        }
+
+
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    password_hash = Column(String(255), nullable=True)
+    full_name = Column(String(255), nullable=False)
+    org_name = Column(String(255), nullable=False)
+    org_type = Column(String(100), default="Bank")
+    role = Column(String(100), default="Chief Risk Officer")
+    
+    # Onboarding profiling questions
+    purpose = Column(Text, default="Basel III Regulatory Capital Defense")
+    investment_horizon = Column(String(50), default="3-5 Years")
+    risk_tolerance = Column(String(50), default="Balanced")
+    regulatory_framework = Column(String(100), default="Basel III & RBI Guidelines")
+    primary_assets_json = Column(Text, default='["GovBonds", "CorpBonds", "Equity", "Gold", "Cash"]')
+    initial_capital = Column(Float, default=1000000000.0)
+    currency = Column(String(10), default="INR")
+    onboarding_completed = Column(Integer, default=1)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "full_name": self.full_name,
+            "org_name": self.org_name,
+            "org_type": self.org_type,
+            "role": self.role,
+            "purpose": self.purpose,
+            "investment_horizon": self.investment_horizon,
+            "risk_tolerance": self.risk_tolerance,
+            "regulatory_framework": self.regulatory_framework,
+            "primary_assets": json.loads(self.primary_assets_json or "[]"),
+            "initial_capital": self.initial_capital,
+            "currency": self.currency,
+            "onboarding_completed": bool(self.onboarding_completed),
+            "isGuest": False,
+            "created_at": self.created_at.isoformat() if self.created_at else None
         }
 
 

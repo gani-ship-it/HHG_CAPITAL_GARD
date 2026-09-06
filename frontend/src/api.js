@@ -139,4 +139,43 @@ export async function clearCopilotHistory(portfolioId = null) {
   return await res.json();
 }
 
+export async function fetchPersonas() {
+  const res = await fetch(`${API_BASE_URL}/auth/personas`);
+  if (!res.ok) throw new Error("Failed to fetch demo personas");
+  return await res.json();
+}
+
+export async function loginUser(payload) {
+  const res = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Login failed" }));
+    throw new Error(err.detail || "Authentication failed");
+  }
+  return await res.json();
+}
+
+export async function registerUser(payload) {
+  const res = await fetch(`${API_BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Registration failed" }));
+    throw new Error(err.detail || "Onboarding failed");
+  }
+  return await res.json();
+}
+
+export async function fetchGuestSession() {
+  const res = await fetch(`${API_BASE_URL}/auth/guest`);
+  if (!res.ok) throw new Error("Failed to initialize guest session");
+  return await res.json();
+}
+
+
 

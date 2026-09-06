@@ -11,6 +11,7 @@ from app.services.optimizer import portfolio_optimizer
 router = APIRouter()
 
 class PortfolioOptimizationRequest(BaseModel):
+    portfolio_id: Optional[int] = Field(default=None, description="Existing portfolio ID to update (optional)")
     org_name: str = Field(default="State Reserve Bank", description="Name of the financial institution")
     org_type: str = Field(default="Bank", description="Bank, Insurance, Investment Firm, etc.")
     total_capital: float = Field(default=1000000000.0, description="Total capital (e.g. 100 Cr = 1,000,000,000)")
@@ -48,7 +49,7 @@ def get_defaults():
 def optimize_portfolio(req: PortfolioOptimizationRequest, db: Session = Depends(get_db)):
     """
     Runs CVXPY Mean-Variance Optimization, calculates portfolio health score,
-    identifies binding constraints, and saves to database.
+    identifies binding constraints, and saves/updates portfolio in database.
     """
     try:
         opt_result = portfolio_optimizer.optimize(
@@ -61,27 +62,52 @@ def optimize_portfolio(req: PortfolioOptimizationRequest, db: Session = Depends(
             constraints=req.constraints
         )
 
-        portfolio = Portfolio(
-            org_name=req.org_name,
-            org_type=req.org_type,
-            total_capital=req.total_capital,
-            currency=req.currency,
-            investment_horizon_years=req.investment_horizon_years,
-            investment_objective=req.investment_objective,
-            risk_preference=req.risk_preference,
-            min_liquidity=req.min_liquidity,
-            max_risk_limit=req.max_risk_limit,
-            selected_assets_json=json.dumps(req.selected_assets),
-            constraints_json=json.dumps(req.constraints),
-            current_weights_json=json.dumps(opt_result["weights"]),
-            expected_return=opt_result["expected_return"],
-            current_risk=opt_result["expected_risk"],
-            current_liquidity=opt_result["current_liquidity"],
-            health_score=opt_result["health_score"],
-            status=opt_result["status"]
-        )
+        portfolio = None
+        if req.portfolio_id:
+            portfolio = db.query(Portfolio).filter(Portfolio.id == req.portfolio_id).first()
+        elif req.org_name == "Apex Reserve Bank":
+            portfolio = db.query(Portfolio).filter(Portfolio.id == 1).first()
 
-        db.add(portfolio)
+        if portfolio:
+            portfolio.org_name = req.org_name
+            portfolio.org_type = req.org_type
+            portfolio.total_capital = req.total_capital
+            portfolio.currency = req.currency
+            portfolio.investment_horizon_years = req.investment_horizon_years
+            portfolio.investment_objective = req.investment_objective
+            portfolio.risk_preference = req.risk_preference
+            portfolio.min_liquidity = req.min_liquidity
+            portfolio.max_risk_limit = req.max_risk_limit
+            portfolio.selected_assets_json = json.dumps(req.selected_assets)
+            portfolio.constraints_json = json.dumps(req.constraints)
+            portfolio.current_weights_json = json.dumps(opt_result["weights"])
+            portfolio.expected_return = opt_result["expected_return"]
+            portfolio.current_risk = opt_result["expected_risk"]
+            portfolio.current_liquidity = opt_result["current_liquidity"]
+            portfolio.health_score = opt_result["health_score"]
+            portfolio.status = opt_result["status"]
+        else:
+            portfolio = Portfolio(
+                org_name=req.org_name,
+                org_type=req.org_type,
+                total_capital=req.total_capital,
+                currency=req.currency,
+                investment_horizon_years=req.investment_horizon_years,
+                investment_objective=req.investment_objective,
+                risk_preference=req.risk_preference,
+                min_liquidity=req.min_liquidity,
+                max_risk_limit=req.max_risk_limit,
+                selected_assets_json=json.dumps(req.selected_assets),
+                constraints_json=json.dumps(req.constraints),
+                current_weights_json=json.dumps(opt_result["weights"]),
+                expected_return=opt_result["expected_return"],
+                current_risk=opt_result["expected_risk"],
+                current_liquidity=opt_result["current_liquidity"],
+                health_score=opt_result["health_score"],
+                status=opt_result["status"]
+            )
+            db.add(portfolio)
+
         db.commit()
         db.refresh(portfolio)
 

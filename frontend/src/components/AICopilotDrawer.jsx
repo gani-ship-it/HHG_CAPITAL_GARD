@@ -16,6 +16,48 @@ import {
 } from "lucide-react";
 import * as api from "../api";
 
+function parseInlineMarkdown(text) {
+  if (!text) return "";
+  const regex = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  const parts = text.split(regex);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+      return <strong key={i} style={{ fontWeight: 600 }}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+      return <em key={i}>{part.slice(1, -1)}</em>;
+    }
+    return part;
+  });
+}
+
+function renderFormattedMessage(content) {
+  if (!content) return null;
+  const lines = content.split("\n");
+  return lines.map((line, idx) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      return <div key={idx} style={{ height: "0.4rem" }} />;
+    }
+    const isBullet = trimmed.startsWith("• ") || trimmed.startsWith("- ") || (trimmed.startsWith("* ") && !trimmed.startsWith("**"));
+    const textContent = isBullet ? trimmed.slice(2) : line;
+    return (
+      <div
+        key={idx}
+        style={{
+          marginBottom: "0.2rem",
+          display: isBullet ? "flex" : "block",
+          alignItems: "flex-start",
+          gap: "0.35rem"
+        }}
+      >
+        {isBullet && <span style={{ color: "#6B7280", userSelect: "none" }}>•</span>}
+        <span>{parseInlineMarkdown(textContent)}</span>
+      </div>
+    );
+  });
+}
+
 export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndicators }) {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -25,6 +67,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
 
   // Quick prompt chips
   const SUGGESTED_PROMPTS = [
+    "What does this website do?",
     "Why was Equity capped at 30%?",
     "Should we execute Rebalance considering 15 bps friction?",
     "Explain our 95% Historical VaR to the Board.",
@@ -375,7 +418,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
                     wordBreak: "break-word"
                   }}
                 >
-                  {msg.content}
+                  {renderFormattedMessage(msg.content)}
                 </div>
 
                 <div style={{ fontSize: "9px", color: "#9CA3AF", padding: "0 0.35rem" }}>
