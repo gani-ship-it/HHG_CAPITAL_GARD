@@ -1,17 +1,19 @@
-# Capital Guard: 3-Minute Hackathon Pitch & Judge Q&A Guide
+# Capital Guard: 3-Minute Hackathon Pitch & Judge Q&A Guide | Team HYVEX
 
-Use this battle-tested guide to deliver a winning presentation to the hackathon judges.
+> **Team Name:** **HYVEX**  
+> **Event:** INIT'26 Hackathon — Track 1: FinTech  
+> **Problem Statement:** Asset & Capital Management / Optimization Controls
 
 ---
 
 ## 1. The 30-Second Elevator Pitch (The Hook)
 
-> *"Judges, almost every financial application in hackathons makes the same mistake: they take inputs, run a quick math formula, display a pie chart, and stop. In the real world, a bank cannot just allocate ₹100 Crores and walk away.*
+> *"Judges, we are **Team HYVEX**. Almost every financial application in hackathons makes the same mistake: they take inputs, run a quick math formula, display a pie chart, and stop. In the real world, a bank cannot just allocate ₹100 Crores and walk away.
 >
-> *Markets crash, bond yields move, and allocations drift into danger. The real problem financial institutions face is:*
+> Markets crash, bond yields move, and allocations drift into danger. The real problem financial institutions face is:
 > **'Where should our capital be allocated today, and what should we do if our portfolio becomes too risky tomorrow?'**
 >
-> *Introducing **Capital Guard** — the first closed-loop capital management platform that optimizes institutional portfolios using mathematical Quadratic Programming, continuously monitors real-world risk metrics like Historical VaR, and executes cost-aware rebalancing when risks are breached."*
+> Introducing **Capital Guard** — the first closed-loop capital management platform that optimizes institutional portfolios using mathematical Quadratic Programming, continuously monitors real-world risk metrics like Historical VaR, and executes cost-aware rebalancing when risks are breached."*
 
 ---
 

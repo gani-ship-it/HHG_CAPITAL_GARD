@@ -1,9 +1,10 @@
 # Capital Guard | Autonomous Institutional Capital Allocation & Risk Defense OS
 
+[![Team HYVEX](https://img.shields.io/badge/Team-HYVEX-black?style=for-the-badge)](https://github.com/gani-ship-it/HHG_CAPITAL_GARD)
+[![INIT'26 Hackathon](https://img.shields.io/badge/INIT'26-FinTech%20Track-blue?style=for-the-badge)](https://github.com/gani-ship-it/HHG_CAPITAL_GARD)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![CVXPY](https://img.shields.io/badge/Optimization-CVXPY%20Clarabel%20QP-red)](https://www.cvxpy.org/)
 [![Supabase](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
 [![Compliance](https://img.shields.io/badge/Standard-Basel%20III%20%7C%20RBI-black)](https://www.bis.org/bcbs/basel3.htm)
@@ -424,6 +425,6 @@ HHG_CAPITAL_GUARD/
 Developed for **INIT'26 Hackathon** — **Track 1: FinTech**  
 **Challenge:** Asset & Capital Management / Optimization Controls
 
+* **Team Name:** **HYVEX**
 * **Repository:** [https://github.com/gani-ship-it/HHG_CAPITAL_GARD.git](https://github.com/gani-ship-it/HHG_CAPITAL_GARD.git)
-* **Team:** Capital Guard Engineering
 * **Regulatory Reference:** Bank for International Settlements (BIS) Basel III Framework & Reserve Bank of India (RBI) Prudential Capital Guidelines.

@@ -48,10 +48,24 @@ export default function TopTelemetryBar() {
         >
           <span
             style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
+              fontFamily: "var(--font-mono)",
+              fontSize: 9,
+              fontWeight: 800,
+              letterSpacing: "0.1em",
               background: "#111111",
+              color: "#FFFFFF",
+              padding: "2px 6px",
+              borderRadius: 3
+            }}
+          >
+            HYVEX
+          </span>
+          <span
+            style={{
+              width: 5,
+              height: 5,
+              borderRadius: "50%",
+              background: "#16A34A",
               flexShrink: 0
             }}
           />
@@ -60,7 +74,7 @@ export default function TopTelemetryBar() {
               fontFamily: "var(--font-mono)",
               fontSize: 10,
               fontWeight: 700,
-              letterSpacing: "0.1em",
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
               color: "#111111"
             }}
