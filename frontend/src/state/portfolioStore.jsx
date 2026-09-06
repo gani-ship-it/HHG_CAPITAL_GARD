@@ -39,6 +39,22 @@ export function PortfolioProvider({ children }) {
   const [isLiveStreaming, setIsLiveStreaming] = useState(true);
   const [lastTickTime, setLastTickTime] = useState(() => new Date().toLocaleTimeString());
 
+  // Real-Time Company P&L State
+  const [realtimePnL, setRealtimePnL] = useState({
+    sessionPnlAmount: 1840000.0,
+    sessionPnlPercent: 0.184,
+    sessionHigh: 2450000.0,
+    sessionLow: -420000.0,
+    assetBreakdown: [
+      { asset: "Equity", weight: 0.25, pnlAmount: 2450000, pnlPercent: 0.98, risk: 16.2, expectedReturn: 12.4 },
+      { asset: "GovBonds", weight: 0.35, pnlAmount: 420000, pnlPercent: 0.12, risk: 5.8, expectedReturn: 4.2 },
+      { asset: "CorpBonds", weight: 0.20, pnlAmount: 310000, pnlPercent: 0.15, risk: 8.9, expectedReturn: 6.5 },
+      { asset: "Gold", weight: 0.10, pnlAmount: -1380000, pnlPercent: -1.38, risk: 14.1, expectedReturn: 8.1 },
+      { asset: "Cash", weight: 0.10, pnlAmount: 40000, pnlPercent: 0.04, risk: 0.5, expectedReturn: 4.5 }
+    ],
+    history: []
+  });
+
   // User Authentication State — null means unauthenticated
   const [currentUser, setCurrentUser] = useState(() => {
     try {
@@ -129,7 +145,7 @@ export function PortfolioProvider({ children }) {
     }
   }, [portfolio?.id]);
 
-  // Real-Time Live Market Ticker Drift Engine (every 3.5s)
+  // Real-Time Live Market Ticker & P&L Drift Engine (every 3.5s)
   useEffect(() => {
     if (!isLiveStreaming || !portfolio || riskStatus === "BREACH") return;
 
@@ -137,23 +153,25 @@ export function PortfolioProvider({ children }) {
       const now = new Date().toLocaleTimeString();
       setLastTickTime(now);
 
+      const totalCapital = portfolio.total_capital || 1000000000.0;
+      const weights = portfolio.allocations || {
+        GovBonds: 0.35,
+        CorpBonds: 0.20,
+        Equity: 0.25,
+        Gold: 0.10,
+        Cash: 0.10
+      };
+
+      // 1. Mean-reverting volatility drift around a safe baseline (comfortably within limit)
       setMonitoringMetrics((prev) => {
         if (!prev) return prev;
-        const baseRisk = portfolio.current_risk || portfolio.expected_risk || 0.062;
-        // Intraday micro-fluctuation drift of ±0.03% (±3 bps)
-        const drift = (Math.random() - 0.5) * 0.0006;
-        const newRisk = Math.max(0.015, Math.min(0.12, (prev.current_risk || baseRisk) + drift));
         const limit = prev.risk_limit || portfolio.max_risk_limit || 0.07;
-        const breached = newRisk > limit;
-
-        if (breached && riskStatus !== "BREACH") {
-          setRiskStatus("BREACH");
-          setActiveAlert({
-            type: "RISK_LIMIT_BREACH",
-            message: `Live volatility drift exceeded statutory limit (${(newRisk * 100).toFixed(2)}% > ${(limit * 100).toFixed(2)}%)`,
-            timestamp: new Date().toISOString()
-          });
-        }
+        const targetBaseline = Math.min(limit * 0.74, 0.049);
+        const current = prev.current_risk || targetBaseline;
+        // Mean reversion pull toward target baseline + small random brownian noise
+        const meanReversion = (targetBaseline - current) * 0.15;
+        const noise = (Math.random() - 0.49) * 0.0003;
+        const newRisk = Math.max(0.02, Math.min(limit - 0.006, current + meanReversion + noise));
 
         return {
           ...prev,
@@ -161,6 +179,63 @@ export function PortfolioProvider({ children }) {
           var_95: newRisk * 0.58,
           cvar_95: newRisk * 0.76,
           last_tick: now
+        };
+      });
+
+      // 2. Real-Time P&L simulation per asset class
+      setRealtimePnL((prev) => {
+        const assets = ["GovBonds", "CorpBonds", "Equity", "Gold", "Cash"];
+        const prevBreakdown = prev?.assetBreakdown || [];
+
+        const assetVol = {
+          Equity: 0.0008,
+          Gold: 0.0005,
+          CorpBonds: 0.0003,
+          GovBonds: 0.0002,
+          Cash: 0.00005
+        };
+
+        const updatedBreakdown = assets.map((asset) => {
+          const w = weights[asset] !== undefined ? weights[asset] : 0.20;
+          const prevEntry = prevBreakdown.find((b) => b.asset === asset) || {
+            pnlPercent: (Math.random() - 0.45) * 0.4,
+            risk: asset === "Equity" ? 16.2 : asset === "Gold" ? 14.1 : asset === "CorpBonds" ? 8.9 : asset === "GovBonds" ? 5.8 : 0.5
+          };
+          const vol = assetVol[asset] || 0.0003;
+          const tickReturn = (Math.random() - 0.485) * vol * 100;
+          const newPnlPercent = prevEntry.pnlPercent + tickReturn;
+          const assetAllocatedCapital = totalCapital * w;
+          const pnlAmount = assetAllocatedCapital * (newPnlPercent / 100);
+
+          return {
+            asset,
+            weight: w,
+            pnlPercent: newPnlPercent,
+            pnlAmount: Math.round(pnlAmount),
+            risk: prevEntry.risk
+          };
+        });
+
+        const totalPnlAmount = updatedBreakdown.reduce((sum, item) => sum + item.pnlAmount, 0);
+        const totalPnlPercent = (totalPnlAmount / totalCapital) * 100;
+        const newHigh = Math.max(prev?.sessionHigh ?? totalPnlAmount, totalPnlAmount);
+        const newLow = Math.min(prev?.sessionLow ?? totalPnlAmount, totalPnlAmount);
+
+        const newHistoryPoint = {
+          time: now,
+          pnlPercent: totalPnlPercent,
+          pnlAmount: totalPnlAmount
+        };
+
+        const updatedHistory = [...(prev?.history || []), newHistoryPoint].slice(-25);
+
+        return {
+          sessionPnlAmount: totalPnlAmount,
+          sessionPnlPercent: totalPnlPercent,
+          sessionHigh: newHigh,
+          sessionLow: newLow,
+          assetBreakdown: updatedBreakdown,
+          history: updatedHistory
         };
       });
     }, 3500);
@@ -290,13 +365,15 @@ export function PortfolioProvider({ children }) {
     if (!portfolio?.id) return;
     setLoading(true);
     try {
-      const baselineRisk = portfolio.expected_risk || portfolio.current_risk || 0.045;
+      const safeCeiling = portfolio.max_risk_limit || 0.07;
+      const baselineRisk = Math.min(0.048, safeCeiling * 0.72);
       const res = await api.simulateMarketChange(portfolio.id, baselineRisk);
-      // Use robust fallback — always reset state regardless of res shape
-      const metricsPayload = res?.metrics || {
+      const metricsPayload = {
         current_risk: baselineRisk,
-        risk_limit: portfolio.max_risk_limit || 0.07,
+        risk_limit: safeCeiling,
         status: "SAFE",
+        var_95: baselineRisk * 0.58,
+        cvar_95: baselineRisk * 0.76,
         liquidity_ratio: portfolio.min_liquidity
           ? portfolio.min_liquidity / (portfolio.total_capital || 1)
           : 0.20
@@ -305,11 +382,9 @@ export function PortfolioProvider({ children }) {
       setRiskStatus("SAFE");
       setActiveAlert(null);
       setRebalanceEval(null);
-      // Update portfolio expected_risk back to baseline
-      setPortfolio((prev) => prev ? { ...prev, expected_risk: baselineRisk, status: "SAFE" } : prev);
+      setPortfolio((prev) => prev ? { ...prev, expected_risk: baselineRisk, current_risk: baselineRisk, status: "SAFE" } : prev);
     } catch (err) {
       console.warn("Reset market shock error:", err);
-      // Even on error, reset visual state so UI isn't stuck in BREACH
       setRiskStatus("SAFE");
       setActiveAlert(null);
     } finally {
@@ -439,10 +514,12 @@ export function PortfolioProvider({ children }) {
     currentUser,
     setCurrentUser,
 
-    // Live Streaming
+    // Live Streaming & Real-Time P&L
     isLiveStreaming,
     setIsLiveStreaming,
     lastTickTime,
+    realtimePnL,
+    setRealtimePnL,
 
     // Actions
     startSetup,

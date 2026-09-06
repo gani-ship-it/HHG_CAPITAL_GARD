@@ -4,6 +4,7 @@ import { formatPercentage } from "../utils/formatPercentage";
 import { formatCurrency } from "../utils/formatCurrency";
 import { calculateHealthScore, getRiskAssessment } from "../utils/riskHelpers";
 import RiskChart from "../components/RiskChart";
+import RealtimePnLTracker from "../components/RealtimePnLTracker";
 import { ShieldAlert, Zap, RotateCcw, ArrowRight } from "lucide-react";
 
 export default function RiskMonitoring() {
@@ -241,6 +242,9 @@ export default function RiskMonitoring() {
           subValue="Tier 1 HQLA · Basel III 100%+ LCR"
         />
       </div>
+
+      {/* ── Real-Time Company Profit & Loss (P&L) Section ── */}
+      <RealtimePnLTracker />
 
       {/* ── Charts: Gauge + Asset Contribution Table ── */}
       <div style={{ display: "grid", gridTemplateColumns: "5fr 7fr", gap: 16 }}>

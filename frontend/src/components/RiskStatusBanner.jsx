@@ -20,8 +20,11 @@ export default function RiskStatusBanner() {
   if (!isInitialized || !portfolio) return null;
 
   const assessment = getRiskAssessment(monitoringMetrics, portfolio);
-  const currentRisk = ((monitoringMetrics?.current_risk || 0.081) * 100).toFixed(2);
-  const riskLimit   = ((monitoringMetrics?.risk_limit || portfolio.max_risk_limit || 0.07) * 100).toFixed(2);
+  const rawCurrent = monitoringMetrics?.current_risk ?? portfolio.expected_risk ?? 0.081;
+  const rawLimit   = monitoringMetrics?.risk_limit ?? portfolio.max_risk_limit ?? 0.07;
+  const currentRisk = (rawCurrent * 100).toFixed(2);
+  const riskLimit   = (rawLimit * 100).toFixed(2);
+  const excessBps   = Math.max(1, Math.round((rawCurrent - rawLimit) * 10000));
 
   return (
     <div
@@ -75,7 +78,7 @@ export default function RiskStatusBanner() {
           </strong>
           {" "}(Limit: <span style={{ fontFamily: "var(--font-mono)" }}>{riskLimit}%</span>,{" "}
           <span style={{ color: "#D32F2F", fontFamily: "var(--font-mono)", fontWeight: 600 }}>
-            +{assessment.excessBps} bps
+            +{excessBps} bps
           </span>
           ). Immediate rebalance required.
         </span>
