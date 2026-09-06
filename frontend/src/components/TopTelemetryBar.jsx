@@ -135,7 +135,7 @@ export default function TopTelemetryBar() {
           <span style={{ fontSize: 11, fontWeight: 500, color: "#111111" }}>AI Copilot</span>
         </button>
 
-        {/* Auth: show "Sign In" or user initials */}
+        {/* Auth: show user name or "Sign In" */}
         <button
           id="topbar-auth-btn"
           onClick={() => setIsAuthModalOpen(true)}
@@ -156,10 +156,13 @@ export default function TopTelemetryBar() {
           onMouseLeave={e => {
             if (!currentUser) e.currentTarget.style.background = "transparent";
           }}
+          title={currentUser ? `Authenticated as ${currentUser.full_name || currentUser.email}` : "Sign In"}
         >
           <UserCircle style={{ width: 12, height: 12, color: currentUser ? "#FFFFFF" : "#111111" }} />
           <span style={{ fontSize: 11, fontWeight: 600, color: currentUser ? "#FFFFFF" : "#111111" }}>
-            {currentUser?.user_metadata?.full_name?.split(" ")[0] || "Sign In"}
+            {currentUser
+              ? (currentUser.isGuest ? "Guest" : (currentUser.full_name?.split(" ")[0] || currentUser.user_metadata?.full_name?.split(" ")[0] || currentUser.email?.split("@")[0] || "User"))
+              : "Sign In"}
           </span>
         </button>
       </div>

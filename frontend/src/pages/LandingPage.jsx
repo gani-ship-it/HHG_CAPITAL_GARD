@@ -355,34 +355,101 @@ export default function LandingPage() {
         })}
       </section>
 
-      {/* ── Auth CTA (if not logged in) ── */}
-      <section
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "20px 24px",
-          border: "1px solid #D4D4D4",
-          borderRadius: 4,
-          background: "#FFFFFF"
-        }}
-      >
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#111111" }}>Institutional Access</div>
-          <div style={{ fontSize: 12, color: "#666666", marginTop: 3 }}>
-            Sign in to save your mandate, access audit history, and enable compliance reporting.
-          </div>
-        </div>
-        <button
-          id="landing-signin-cta"
-          onClick={() => setIsAuthModalOpen(true)}
-          className="cg-btn-primary"
-          style={{ whiteSpace: "nowrap", fontSize: 12 }}
+      {/* ── Footer CTA: Active Verified Session Status or Guest Sign In ── */}
+      {currentUser ? (
+        <section
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "18px 24px",
+            border: "1px solid #111111",
+            borderRadius: 4,
+            background: "#FFFFFF",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.04)"
+          }}
         >
-          <Lock style={{ width: 12, height: 12 }} />
-          Sign In
-        </button>
-      </section>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 4,
+                background: "#111111",
+                color: "#FFFFFF",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0
+              }}
+            >
+              <CheckCircle2 size={18} />
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 13.5, fontWeight: 700, color: "#111111" }}>
+                  Verified Session: {currentUser.full_name || currentUser.user_metadata?.full_name || currentUser.email}
+                </span>
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    padding: "2px 7px",
+                    background: "#111111",
+                    color: "#FFFFFF",
+                    borderRadius: 3,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em"
+                  }}
+                >
+                  {currentUser.isGuest ? "GUEST SANDBOX" : (currentUser.role || "Risk Officer")}
+                </span>
+              </div>
+              <div style={{ fontSize: 12, color: "#666666", marginTop: 2 }}>
+                {currentUser.org_name || portfolio?.org_name || "Apex Reserve Bank"} • Authenticated institutional access under Basel III & RBI guidelines.
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <button
+              onClick={() => setActiveTab("setup")}
+              className="cg-btn-primary"
+              style={{ fontSize: 12.5, padding: "9px 18px", whiteSpace: "nowrap" }}
+            >
+              Configure Mandate
+              <ArrowRight size={14} />
+            </button>
+          </div>
+        </section>
+      ) : (
+        <section
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "20px 24px",
+            border: "1px solid #D4D4D4",
+            borderRadius: 4,
+            background: "#FFFFFF"
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#111111" }}>Institutional Access</div>
+            <div style={{ fontSize: 12, color: "#666666", marginTop: 3 }}>
+              Sign in to save your mandate, access audit history, and enable compliance reporting.
+            </div>
+          </div>
+          <button
+            id="landing-signin-cta"
+            onClick={() => setIsAuthModalOpen(true)}
+            className="cg-btn-primary"
+            style={{ whiteSpace: "nowrap", fontSize: 12 }}
+          >
+            <Lock style={{ width: 12, height: 12 }} />
+            Sign In
+          </button>
+        </section>
+      )}
     </div>
   );
 }
