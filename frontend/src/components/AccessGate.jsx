@@ -186,285 +186,299 @@ export default function AccessGate() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         width: "100vw",
+        height: "100vh",
         background: "#FFFFFF",
         color: "#111111",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "32px 16px",
         overflowY: "auto",
-        fontFamily: "var(--font-sans)"
+        overflowX: "hidden",
+        WebkitOverflowScrolling: "touch",
+        fontFamily: "var(--font-sans)",
+        zIndex: 9999
       }}
     >
-      {/* Top Identity Header */}
-      <div style={{ textAlign: "center", marginBottom: 32, maxWidth: 640 }}>
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "6px 16px",
-            background: "#F4F4F5",
-            border: "1px solid #E4E4E7",
-            borderRadius: 20,
-            fontSize: 13,
-            fontWeight: 600,
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-            marginBottom: 16
-          }}
-        >
-          <Shield size={16} strokeWidth={2.2} />
-          <span>Capital Guard Risk Engine</span>
-          <span style={{ color: "#A1A1AA" }}>•</span>
-          <span style={{ color: "#71717A" }}>Clarabel QP Institutional Access</span>
-        </div>
-        <h1
-          style={{
-            fontSize: 34,
-            fontWeight: 800,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.15,
-            marginBottom: 10,
-            color: "#111111"
-          }}
-        >
-          Access Gate & Institutional Verification
-        </h1>
-        <p style={{ fontSize: 16, color: "#666666", lineHeight: 1.5 }}>
-          Autonomous multi-asset portfolio risk defense & Basel III compliance.
-          Choose your access tier or enter the live guest sandbox.
-        </p>
-      </div>
-
-      {/* Main Form Container */}
       <div
         style={{
+          minHeight: "100%",
           width: "100%",
-          maxWidth: 680,
-          background: "#FFFFFF",
-          border: "1px solid #111111",
-          borderRadius: 6,
-          boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
-          overflow: "hidden"
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          padding: "24px 16px 80px 16px"
         }}
       >
-        {/* Navigation Tabs */}
-        <div
-          style={{
-            display: "flex",
-            borderBottom: "1px solid #EAEAEA",
-            background: "#FAFAFA"
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => { setActiveMode("signin"); setError(null); }}
-            style={{
-              flex: 1,
-              padding: "16px 20px",
-              border: "none",
-              borderBottom: activeMode === "signin" ? "2px solid #111111" : "2px solid transparent",
-              background: activeMode === "signin" ? "#FFFFFF" : "transparent",
-              fontWeight: 700,
-              fontSize: 14.5,
-              color: activeMode === "signin" ? "#111111" : "#71717A",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              transition: "all 0.15s ease"
-            }}
-          >
-            <Lock size={16} />
-            <span>Sign In (Existing Account)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => { setActiveMode("signup"); setOnboardingStep(1); setError(null); }}
-            style={{
-              flex: 1,
-              padding: "16px 20px",
-              border: "none",
-              borderBottom: activeMode === "signup" ? "2px solid #111111" : "2px solid transparent",
-              background: activeMode === "signup" ? "#FFFFFF" : "transparent",
-              fontWeight: 700,
-              fontSize: 14.5,
-              color: activeMode === "signup" ? "#111111" : "#71717A",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              transition: "all 0.15s ease"
-            }}
-          >
-            <Building2 size={16} />
-            <span>Sign Up (New Institution)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => { setActiveMode("guest"); setError(null); }}
-            style={{
-              flex: 1,
-              padding: "16px 20px",
-              border: "none",
-              borderBottom: activeMode === "guest" ? "2px solid #111111" : "2px solid transparent",
-              background: activeMode === "guest" ? "#FFFFFF" : "transparent",
-              fontWeight: 700,
-              fontSize: 14.5,
-              color: activeMode === "guest" ? "#111111" : "#71717A",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 8,
-              transition: "all 0.15s ease"
-            }}
-          >
-            <Sparkles size={16} />
-            <span>Guest Sandbox</span>
-          </button>
-        </div>
-
-        {/* Error Notification Banner */}
-        {error && (
+        {/* Top Identity Header */}
+        <div style={{ textAlign: "center", marginBottom: 20, maxWidth: 640 }}>
           <div
             style={{
-              margin: "16px 24px 0",
-              padding: "12px 16px",
-              background: "rgba(211,47,47,0.06)",
-              border: "1px solid rgba(211,47,47,0.3)",
-              borderRadius: 4,
-              display: "flex",
+              display: "inline-flex",
               alignItems: "center",
-              gap: 10,
-              color: "#D32F2F",
-              fontSize: 14
+              gap: 8,
+              padding: "4px 14px",
+              background: "#F4F4F5",
+              border: "1px solid #E4E4E7",
+              borderRadius: 20,
+              fontSize: 12,
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              marginBottom: 10
             }}
           >
-            <AlertTriangle size={18} style={{ flexShrink: 0 }} />
-            <span>{error}</span>
+            <Shield size={14} strokeWidth={2.2} />
+            <span>Capital Guard Risk Engine</span>
+            <span style={{ color: "#A1A1AA" }}>•</span>
+            <span style={{ color: "#71717A" }}>Clarabel QP Institutional Access</span>
           </div>
-        )}
+          <h1
+            style={{
+              fontSize: 28,
+              fontWeight: 800,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.2,
+              marginBottom: 6,
+              color: "#111111"
+            }}
+          >
+            Access Gate & Institutional Verification
+          </h1>
+          <p style={{ fontSize: 14, color: "#666666", lineHeight: 1.4 }}>
+            Autonomous multi-asset portfolio risk defense & Basel III compliance.
+            Choose your access tier or enter the live guest sandbox.
+          </p>
+        </div>
 
-        {/* ============================================================
-            TAB 1: SIGN IN (Fast & Direct — No extra questions)
-           ============================================================ */}
-        {activeMode === "signin" && (
-          <div style={{ padding: "28px 32px" }}>
-            <div style={{ marginBottom: 20 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
-                Welcome Back
-              </h2>
-              <p style={{ fontSize: 14, color: "#666666" }}>
-                Sign in to resume your regulatory portfolio management and access your permanent audit trail.
-              </p>
+        {/* Main Form Container */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 660,
+            background: "#FFFFFF",
+            border: "1px solid #111111",
+            borderRadius: 6,
+            boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
+            overflow: "hidden"
+          }}
+        >
+          {/* Navigation Tabs */}
+          <div
+            style={{
+              display: "flex",
+              borderBottom: "1px solid #EAEAEA",
+              background: "#FAFAFA"
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => { setActiveMode("signin"); setError(null); }}
+              style={{
+                flex: 1,
+                padding: "13px 16px",
+                border: "none",
+                borderBottom: activeMode === "signin" ? "2px solid #111111" : "2px solid transparent",
+                background: activeMode === "signin" ? "#FFFFFF" : "transparent",
+                fontWeight: 700,
+                fontSize: 14,
+                color: activeMode === "signin" ? "#111111" : "#71717A",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                transition: "all 0.15s ease"
+              }}
+            >
+              <Lock size={15} />
+              <span>Sign In (Existing Account)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setActiveMode("signup"); setOnboardingStep(1); setError(null); }}
+              style={{
+                flex: 1,
+                padding: "13px 16px",
+                border: "none",
+                borderBottom: activeMode === "signup" ? "2px solid #111111" : "2px solid transparent",
+                background: activeMode === "signup" ? "#FFFFFF" : "transparent",
+                fontWeight: 700,
+                fontSize: 14,
+                color: activeMode === "signup" ? "#111111" : "#71717A",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                transition: "all 0.15s ease"
+              }}
+            >
+              <Building2 size={15} />
+              <span>Sign Up (New Institution)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setActiveMode("guest"); setError(null); }}
+              style={{
+                flex: 1,
+                padding: "13px 16px",
+                border: "none",
+                borderBottom: activeMode === "guest" ? "2px solid #111111" : "2px solid transparent",
+                background: activeMode === "guest" ? "#FFFFFF" : "transparent",
+                fontWeight: 700,
+                fontSize: 14,
+                color: activeMode === "guest" ? "#111111" : "#71717A",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                transition: "all 0.15s ease"
+              }}
+            >
+              <Sparkles size={15} />
+              <span>Guest Sandbox</span>
+            </button>
+          </div>
+
+          {/* Error Notification Banner */}
+          {error && (
+            <div
+              style={{
+                margin: "14px 20px 0",
+                padding: "10px 14px",
+                background: "rgba(211,47,47,0.06)",
+                border: "1px solid rgba(211,47,47,0.3)",
+                borderRadius: 4,
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                color: "#D32F2F",
+                fontSize: 13.5
+              }}
+            >
+              <AlertTriangle size={17} style={{ flexShrink: 0 }} />
+              <span>{error}</span>
             </div>
+          )}
 
-            <form onSubmit={handleSignInSubmit}>
+          {/* ============================================================
+              TAB 1: SIGN IN (Fast & Direct — No extra questions)
+             ============================================================ */}
+          {activeMode === "signin" && (
+            <div style={{ padding: "22px 26px" }}>
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>
-                  Institutional Email
-                </label>
-                <input
-                  type="email"
-                  placeholder="e.g. cro@apexbank.com"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "11px 14px",
-                    border: "1px solid #D4D4D4",
-                    borderRadius: 4,
-                    fontSize: 15,
-                    fontFamily: "var(--font-sans)",
-                    outline: "none"
-                  }}
-                  required
-                />
+                <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 3 }}>
+                  Welcome Back
+                </h2>
+                <p style={{ fontSize: 13.5, color: "#666666" }}>
+                  Sign in to resume your regulatory portfolio management and access your permanent audit trail.
+                </p>
               </div>
 
-              <div style={{ marginBottom: 22 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 6 }}>
-                  Password
-                </label>
-                <input
-                  type="password"
-                  placeholder="••••••••••••"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  style={{
-                    width: "100%",
-                    padding: "11px 14px",
-                    border: "1px solid #D4D4D4",
-                    borderRadius: 4,
-                    fontSize: 15,
-                    fontFamily: "var(--font-sans)",
-                    outline: "none"
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="cg-btn-primary"
-                style={{ width: "100%", justifyContent: "center", padding: "13px 20px", fontSize: 15 }}
-              >
-                {loading ? "Authenticating..." : "Sign In to Institutional Dashboard"}
-                <ArrowRight size={16} />
-              </button>
-            </form>
-
-            {/* Quick-Access Verified Demo Personas */}
-            <div style={{ marginTop: 28, paddingTop: 20, borderTop: "1px solid #EAEAEA" }}>
-              <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#888888", marginBottom: 12 }}>
-                Or 1-Click Sign In as Verified Institutional Persona:
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {personas.map((p) => (
-                  <div
-                    key={p.id}
-                    onClick={() => handlePersonaSelect(p)}
+              <form onSubmit={handleSignInSubmit}>
+                <div style={{ marginBottom: 13 }}>
+                  <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, marginBottom: 5 }}>
+                    Institutional Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="e.g. cro@apexbank.com"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
                     style={{
-                      padding: "12px 16px",
-                      border: "1px solid #EAEAEA",
+                      width: "100%",
+                      padding: "9px 12px",
+                      border: "1px solid #D4D4D4",
                       borderRadius: 4,
-                      background: "#FFFFFF",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      transition: "border-color 0.15s ease, background 0.15s ease"
+                      fontSize: 14,
+                      fontFamily: "var(--font-sans)",
+                      outline: "none"
                     }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#111111"; e.currentTarget.style.background = "#F9F9F9"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#EAEAEA"; e.currentTarget.style.background = "#FFFFFF"; }}
-                  >
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
-                        <span style={{ fontWeight: 700, fontSize: 14 }}>{p.name}</span>
-                        <span style={{ padding: "2px 8px", background: "#111111", color: "#FFFFFF", borderRadius: 3, fontSize: 11, fontWeight: 600 }}>
-                          {p.badge}
-                        </span>
+                    required
+                  />
+                </div>
+
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: "block", fontSize: 12.5, fontWeight: 600, marginBottom: 5 }}>
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="••••••••••••"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "9px 12px",
+                      border: "1px solid #D4D4D4",
+                      borderRadius: 4,
+                      fontSize: 14,
+                      fontFamily: "var(--font-sans)",
+                      outline: "none"
+                    }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="cg-btn-primary"
+                  style={{ width: "100%", justifyContent: "center", padding: "11px 18px", fontSize: 14.5 }}
+                >
+                  {loading ? "Authenticating..." : "Sign In to Institutional Dashboard"}
+                  <ArrowRight size={16} />
+                </button>
+              </form>
+
+              {/* Quick-Access Verified Demo Personas */}
+              <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #EAEAEA" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#888888", marginBottom: 10 }}>
+                  Or 1-Click Sign In as Verified Institutional Persona:
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {personas.map((p) => (
+                    <div
+                      key={p.id}
+                      onClick={() => handlePersonaSelect(p)}
+                      style={{
+                        padding: "10px 14px",
+                        border: "1px solid #EAEAEA",
+                        borderRadius: 4,
+                        background: "#FFFFFF",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        transition: "border-color 0.15s ease, background 0.15s ease"
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#111111"; e.currentTarget.style.background = "#F9F9F9"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#EAEAEA"; e.currentTarget.style.background = "#FFFFFF"; }}
+                    >
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                          <span style={{ fontWeight: 700, fontSize: 13.5 }}>{p.name}</span>
+                          <span style={{ padding: "2px 7px", background: "#111111", color: "#FFFFFF", borderRadius: 3, fontSize: 10.5, fontWeight: 600 }}>
+                            {p.badge}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 12, color: "#666666" }}>
+                          {p.orgName} • {p.email}
+                        </div>
                       </div>
-                      <div style={{ fontSize: 12.5, color: "#666666" }}>
-                        {p.orgName} • {p.email}
-                      </div>
+                      <ArrowRight size={15} color="#888888" />
                     </div>
-                    <ArrowRight size={16} color="#888888" />
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* ============================================================
             TAB 2: SIGN UP (Multi-Step Onboarding Questionnaire)
@@ -1066,9 +1080,10 @@ export default function AccessGate() {
         )}
       </div>
 
-      {/* Footer Branding */}
-      <div style={{ marginTop: 28, fontSize: 12, color: "#999999", letterSpacing: "0.04em" }}>
-        CAPITAL GUARD RISK ENGINE • BASEL III REGULATORY COMPLIANCE SYSTEM
+        {/* Footer Branding */}
+        <div style={{ marginTop: 24, paddingBottom: 24, fontSize: 12, color: "#999999", letterSpacing: "0.04em" }}>
+          CAPITAL GUARD RISK ENGINE • BASEL III REGULATORY COMPLIANCE SYSTEM
+        </div>
       </div>
     </div>
   );
