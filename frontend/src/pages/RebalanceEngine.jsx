@@ -184,7 +184,11 @@ export default function RebalanceEngine() {
         {[
           { label: "Current Risk (Stressed)", value: formatPercentage(currentRisk), sub: "Pre-rebalance", isDanger: isBreach },
           { label: "Post-Rebalance Risk", value: formatPercentage(postRisk), sub: `Ceiling: ${formatPercentage(portfolio.max_risk_limit || 0.07)}` },
-          { label: "Risk Reduction", value: `-${riskRedBps} bps`, sub: "Volatility reduction" },
+          {
+            label: "Risk Reduction",
+            value: turnover < 0.001 ? "0 bps" : (riskRedBps >= 0 ? `+${riskRedBps} bps` : `${riskRedBps} bps`),
+            sub: turnover < 0.001 ? "Already in equilibrium" : "Volatility reduction"
+          },
           { label: "Friction Cost", value: formatCurrency(txCostAmount, portfolio.currency), sub: `${(turnover * 100).toFixed(1)}% Turnover @ ${rebalanceCostBps} bps` }
         ].map(card => (
           <div key={card.label} className="cg-card" style={{ padding: 18 }}>
@@ -201,8 +205,8 @@ export default function RebalanceEngine() {
       <div style={{
         padding: "14px 20px",
         borderRadius: 4,
-        border: `1px solid ${isBeneficial ? "#111111" : "#D32F2F"}`,
-        background: isBeneficial ? "#FAFAFA" : "rgba(211,47,47,0.04)",
+        border: `1px solid ${turnover < 0.001 ? "#16A34A" : isBeneficial ? "#111111" : "#D32F2F"}`,
+        background: turnover < 0.001 ? "rgba(22,163,74,0.04)" : isBeneficial ? "#FAFAFA" : "rgba(211,47,47,0.04)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -211,13 +215,16 @@ export default function RebalanceEngine() {
         <div>
           <div style={{ fontSize: 12, fontWeight: 700, color: "#111111", marginBottom: 2 }}>
             Quantitative Recommendation:{" "}
-            <span style={{ color: isBeneficial ? "#111111" : "#D32F2F" }}>
-              {isBeneficial ? "EXECUTE REBALANCE" : "REVIEW PARAMETERS — HIGH FRICTION"}
+            <span style={{ color: turnover < 0.001 ? "#16A34A" : isBeneficial ? "#111111" : "#D32F2F" }}>
+              {turnover < 0.001 ? "HOLD — PORTFOLIO IS IN EQUILIBRIUM" : isBeneficial ? "EXECUTE REBALANCE" : "TACTICAL HOLD — HIGH FRICTION"}
             </span>
           </div>
           <div style={{ fontSize: 11, color: "#666666" }}>
-            Risk reduction of {riskRedBps} bps {isBeneficial ? ">" : "<"} transaction cost of {rebalanceCostBps} bps.
-            Net value: {isBeneficial ? "+" : ""}{riskRedBps - rebalanceCostBps} bps.
+            {turnover < 0.001
+              ? "Current portfolio allocations already match the optimal convex QP target. Turnover is 0.0%. No trade execution required."
+              : isBeneficial
+                ? `Risk reduction of ${riskRedBps} bps exceeds transaction friction of ${rebalanceCostBps} bps. Net value: +${riskRedBps - rebalanceCostBps} bps.`
+                : `Risk reduction of ${riskRedBps} bps is less than transaction cost of ${rebalanceCostBps} bps. Net value: ${riskRedBps - rebalanceCostBps} bps.`}
           </div>
         </div>
       </div>
@@ -286,8 +293,16 @@ export default function RebalanceEngine() {
                 <div style={{ fontFamily: "var(--font-mono)", fontWeight: 700, textAlign: "right", color: isBuy ? "#111111" : isSell ? "#D32F2F" : "#AAAAAA" }}>
                   {formatDelta(deltaW)}
                 </div>
-                <div style={{ fontFamily: "var(--font-mono)", color: "#555555", textAlign: "right" }}>
-                  {Math.abs(deltaW) > 0.001 ? formatCurrency(tradeAmt, portfolio.currency) : "—"}
+                <div style={{ fontFamily: "var(--font-mono)", textAlign: "right" }}>
+                  {Math.abs(deltaW) > 0.001 ? (
+                    <span style={{ fontWeight: 700, color: isBuy ? "#16A34A" : "#DC2626" }}>
+                      {isBuy ? "+" : "-"}{formatCurrency(tradeAmt, portfolio.currency)}
+                    </span>
+                  ) : (
+                    <span style={{ color: "#888888", fontSize: 11 }}>
+                      {portfolio.currency === "INR" ? "₹0.00" : "$0.00"} (No Trade)
+                    </span>
+                  )}
                 </div>
               </div>
             );
