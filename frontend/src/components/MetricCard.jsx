@@ -1,10 +1,6 @@
 import React from "react";
 import { Info } from "lucide-react";
 
-/**
- * MetricCard — Monochrome institutional stat card.
- * Uses near-black text on white backgrounds. Only "danger" status uses crimson.
- */
 export default function MetricCard({
   title,
   value,
@@ -30,8 +26,7 @@ export default function MetricCard({
         transition: "border-color 0.15s ease"
       }}
     >
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           {Icon && <Icon style={{ width: 12, height: 12, color: isDanger ? "#D32F2F" : "#888888", flexShrink: 0 }} />}
           <span
@@ -53,8 +48,7 @@ export default function MetricCard({
         )}
       </div>
 
-      {/* Main Value */}
-      <div
+            <div
         style={{
           fontFamily: "var(--font-mono)",
           fontSize: 26,
@@ -67,8 +61,7 @@ export default function MetricCard({
         {value}
       </div>
 
-      {/* Footer */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 8, borderTop: "1px solid #F0F0F0" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 8, borderTop: "1px solid #F0F0F0" }}>
         <span style={{ fontSize: 11, color: "#888888" }}>{subtitle}</span>
         {delta && (
           <span

@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Cpu, Shield, Scale, CheckCircle2 } from "lucide-react";
 
-/**
- * DecisionExplanation — Collapsible card explaining the Clarabel QP solver's logic.
- * Monochrome design: white cards, black borders, no emerald/teal.
- */
 export default function DecisionExplanation({
   objective = "Balanced Growth",
   optimizationData = {},
@@ -45,8 +41,7 @@ export default function DecisionExplanation({
 
       {isOpen && (
         <div style={{ padding: "0 20px 20px", borderTop: "1px solid #EAEAEA" }}>
-          {/* QP Formula */}
-          <p style={{ fontSize: 12, color: "#666666", lineHeight: 1.65, marginTop: 14, marginBottom: 16 }}>
+                    <p style={{ fontSize: 12, color: "#666666", lineHeight: 1.65, marginTop: 14, marginBottom: 16 }}>
             The target allocation is synthesized by minimizing portfolio variance{" "}
             <code style={{
               fontFamily: "var(--font-mono)",
@@ -62,8 +57,7 @@ export default function DecisionExplanation({
             subject to Basel III statutory liquidity and regulatory asset ceilings using the interior-point Clarabel conic solver.
           </p>
 
-          {/* Three pillars */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
             {[
               {
                 icon: Shield,

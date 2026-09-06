@@ -56,7 +56,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
 
   if (!isOpen) return null;
 
-  // 1-Click Instant Demo Login for Judges & Evaluators
   function handleDemoLogin(persona) {
     setLoading(true);
     setError(null);
@@ -78,7 +77,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
     }, 400);
   }
 
-  // Real Supabase Auth submission
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
@@ -106,7 +104,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
       }
     } catch (err) {
       console.error("Auth error:", err);
-      // If network/rate limit, allow fallback
       setError(err.message || "Authentication failed. Please verify credentials.");
     } finally {
       setLoading(false);
@@ -145,8 +142,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
           overflow: "hidden"
         }}
       >
-        {/* Modal Header */}
-        <div
+                <div
           style={{
             background: "#111111",
             color: "#FFFFFF",
@@ -199,8 +195,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
         </div>
 
         <div style={{ padding: "1.5rem 1.75rem", maxHeight: "85vh", overflowY: "auto" }}>
-          {/* Quick Judge Access Section */}
-          <div style={{ marginBottom: "1.5rem" }}>
+                    <div style={{ marginBottom: "1.5rem" }}>
             <div
               style={{
                 display: "flex",
@@ -290,8 +285,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
             </div>
           </div>
 
-          {/* Divider */}
-          <div
+                    <div
             style={{
               display: "flex",
               alignItems: "center",
@@ -306,8 +300,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
             <div style={{ flex: 1, height: "1px", background: "#E5E5E5" }} />
           </div>
 
-          {/* Tab Selector: Sign In vs Sign Up */}
-          <div
+                    <div
             style={{
               display: "flex",
               border: "1px solid #E0E0E0",
@@ -361,8 +354,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
             </button>
           </div>
 
-          {/* Error Message */}
-          {error && (
+                    {error && (
             <div
               style={{
                 background: "#FEECEB",
@@ -382,8 +374,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
             </div>
           )}
 
-          {/* Success Message */}
-          {successMessage && (
+                    {successMessage && (
             <div
               style={{
                 background: "#F4FBF7",
@@ -403,8 +394,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
             </div>
           )}
 
-          {/* Real Form */}
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
             {authMode === "signup" && (
               <>
                 <div>
@@ -617,8 +607,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, currentUser 
             </button>
           </form>
 
-          {/* Supabase Security Badge */}
-          <div
+                    <div
             style={{
               marginTop: "1.25rem",
               paddingTop: "0.75rem",

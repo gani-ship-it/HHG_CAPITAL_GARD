@@ -3,7 +3,6 @@ import { usePortfolio } from "../state/portfolioStore";
 import { formatCurrency } from "../utils/formatCurrency";
 import { Download, FileText, ChevronRight, X } from "lucide-react";
 
-/* Decision badge styles — monochrome with single exception */
 function DecisionBadge({ decision }) {
   const isRebalance = decision === "REBALANCE";
   const isHold = decision === "HOLD" || decision === "HOLD_NO_ACTION";
@@ -56,8 +55,7 @@ export default function AuditHistory() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 40px", display: "flex", flexDirection: "column", gap: 24 }}>
 
-      {/* ── Header ── */}
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.02em", color: "#111111" }}>
@@ -91,8 +89,7 @@ export default function AuditHistory() {
         )}
       </div>
 
-      {/* ── Empty State ── */}
-      {!decisionHistory || decisionHistory.length === 0 ? (
+            {!decisionHistory || decisionHistory.length === 0 ? (
         <div style={{ padding: "60px 24px", border: "1px solid #EAEAEA", borderRadius: 4, background: "#FFFFFF", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
           <FileText style={{ width: 36, height: 36, color: "#D4D4D4" }} />
           <div style={{ fontSize: 15, fontWeight: 700, color: "#111111" }}>No Audit Records Yet</div>
@@ -109,7 +106,6 @@ export default function AuditHistory() {
           </div>
         </div>
       ) : (
-        /* ── Audit Table ── */
         <div className="cg-card" style={{ overflow: "hidden" }}>
           <div style={{ overflowX: "auto" }}>
             <table className="cg-table">
@@ -174,8 +170,7 @@ export default function AuditHistory() {
         </div>
       )}
 
-      {/* ── Record Detail Modal ── */}
-      {selectedRecord && (
+            {selectedRecord && (
         <div
           style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
           onClick={(e) => { if (e.target === e.currentTarget) setSelectedRecord(null); }}
@@ -189,8 +184,7 @@ export default function AuditHistory() {
             padding: 28,
             boxShadow: "0 8px 32px rgba(0,0,0,0.12)"
           }}>
-            {/* Modal header */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 16, marginBottom: 16, borderBottom: "1px solid #EAEAEA" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 16, marginBottom: 16, borderBottom: "1px solid #EAEAEA" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <FileText style={{ width: 16, height: 16, color: "#111111" }} />
                 <span style={{ fontSize: 13, fontWeight: 700, color: "#111111", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>
@@ -202,8 +196,7 @@ export default function AuditHistory() {
               </button>
             </div>
 
-            {/* Modal fields */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {[
                 { label: "Timestamp", value: selectedRecord.timestamp || "Immediate" },
                 { label: "Signatory", value: currentUser?.user_metadata?.full_name || "Institutional User" },
@@ -219,15 +212,13 @@ export default function AuditHistory() {
                   <span style={{ fontSize: 12, fontFamily: "var(--font-mono)", fontWeight: 500, color: "#111111" }}>{row.value}</span>
                 </div>
               ))}
-              {/* Decision */}
-              <div style={{ display: "flex", justifyContent: "space-between", padding: "9px 0", borderBottom: "1px solid #F0F0F0", alignItems: "center" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", padding: "9px 0", borderBottom: "1px solid #F0F0F0", alignItems: "center" }}>
                 <span style={{ fontSize: 12, color: "#888888" }}>Decision</span>
                 <DecisionBadge decision={selectedRecord.decision} />
               </div>
             </div>
 
-            {/* Rationale */}
-            <div style={{ marginTop: 16 }}>
+                        <div style={{ marginTop: 16 }}>
               <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "#888888", marginBottom: 6 }}>
                 Committee Rationale
               </div>

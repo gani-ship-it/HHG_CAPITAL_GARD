@@ -3,11 +3,6 @@ import { usePortfolio } from "../state/portfolioStore";
 import { calculateHealthScore, getRiskAssessment } from "../utils/riskHelpers";
 import { ShieldAlert, ArrowRight, RotateCcw } from "lucide-react";
 
-/**
- * RiskStatusBanner — only rendered when riskStatus === "BREACH".
- * High-contrast crimson strip with immediate rebalance CTA.
- * Monochrome design: color is ONLY used here as an exception (design system rule).
- */
 export default function RiskStatusBanner() {
   const {
     isInitialized,
@@ -40,10 +35,8 @@ export default function RiskStatusBanner() {
         userSelect: "none"
       }}
     >
-      {/* Left: Breach label + message */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-        {/* Breach badge */}
-        <div
+            <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+                <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -70,8 +63,7 @@ export default function RiskStatusBanner() {
           </span>
         </div>
 
-        {/* Message */}
-        <span style={{ fontSize: 12, color: "#111111" }}>
+                <span style={{ fontSize: 12, color: "#111111" }}>
           Mandate limit exceeded: Volatility elevated to{" "}
           <strong style={{ fontFamily: "var(--font-mono)", color: "#D32F2F" }}>
             {currentRisk}%
@@ -84,8 +76,7 @@ export default function RiskStatusBanner() {
         </span>
       </div>
 
-      {/* Right: CTAs */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
         <button
           id="breach-rebalance-btn"
           onClick={() => setActiveTab("rebalance")}

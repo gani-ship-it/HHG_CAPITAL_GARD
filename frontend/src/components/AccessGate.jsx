@@ -19,33 +19,26 @@ import {
 export default function AccessGate() {
   const { setCurrentUser, setPortfolio, setIsInitialized } = usePortfolio();
 
-  // Mode: "signin" | "signup" | "guest_info"
   const [activeMode, setActiveMode] = useState("signin");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Demo personas for instant 1-click login
   const [personas, setPersonas] = useState([]);
 
-  // Sign In Form State
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
 
-  // Sign Up Multi-Step Questionnaire State
   const [onboardingStep, setOnboardingStep] = useState(1);
   const [signupData, setSignupData] = useState({
-    // Step 1: Identity & Credentials
     full_name: "",
     email: "",
     password: "",
     role: "Chief Risk Officer",
     
-    // Step 2: Institution & Objective
     org_name: "",
     org_type: "Central / Commercial Bank",
     purpose: "Basel III Regulatory Capital Defense & Pillar 1 VaR Headroom",
 
-    // Step 3: Mandate & Risk Architecture
     initial_capital: 1000000000.0, // ₹1,000 Cr
     currency: "INR",
     investment_horizon: "3-5 Years",
@@ -66,7 +59,6 @@ export default function AccessGate() {
     return () => { mounted = false; };
   }, []);
 
-  // Quick 1-click persona sign-in
   const handlePersonaSelect = async (persona) => {
     setLoading(true);
     setError(null);
@@ -91,7 +83,6 @@ export default function AccessGate() {
     }
   };
 
-  // Regular Sign In
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
     if (!loginEmail) {
@@ -121,7 +112,6 @@ export default function AccessGate() {
     }
   };
 
-  // Sign Up Multi-Step Next
   const handleNextStep = (e) => {
     e?.preventDefault();
     if (onboardingStep === 1) {
@@ -140,7 +130,6 @@ export default function AccessGate() {
     setOnboardingStep((prev) => prev + 1);
   };
 
-  // Sign Up Multi-Step Registration Submit
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -163,7 +152,6 @@ export default function AccessGate() {
     }
   };
 
-  // Enter Guest Mode
   const handleGuestMode = async () => {
     setLoading(true);
     setError(null);
@@ -213,8 +201,7 @@ export default function AccessGate() {
           padding: "24px 16px 80px 16px"
         }}
       >
-        {/* Top Identity Header */}
-        <div style={{ textAlign: "center", marginBottom: 20, maxWidth: 640 }}>
+                <div style={{ textAlign: "center", marginBottom: 20, maxWidth: 640 }}>
           <div
             style={{
               display: "inline-flex",
@@ -254,8 +241,7 @@ export default function AccessGate() {
           </p>
         </div>
 
-        {/* Main Form Container */}
-        <div
+                <div
           style={{
             width: "100%",
             maxWidth: 660,
@@ -266,8 +252,7 @@ export default function AccessGate() {
             overflow: "hidden"
           }}
         >
-          {/* Navigation Tabs */}
-          <div
+                    <div
             style={{
               display: "flex",
               borderBottom: "1px solid #EAEAEA",
@@ -347,8 +332,7 @@ export default function AccessGate() {
             </button>
           </div>
 
-          {/* Error Notification Banner */}
-          {error && (
+                    {error && (
             <div
               style={{
                 margin: "14px 20px 0",
@@ -368,10 +352,7 @@ export default function AccessGate() {
             </div>
           )}
 
-          {/* ============================================================
-              TAB 1: SIGN IN (Fast & Direct — No extra questions)
-             ============================================================ */}
-          {activeMode === "signin" && (
+                    {activeMode === "signin" && (
             <div style={{ padding: "22px 26px" }}>
               <div style={{ marginBottom: 16 }}>
                 <h2 style={{ fontSize: 19, fontWeight: 700, marginBottom: 3 }}>
@@ -437,8 +418,7 @@ export default function AccessGate() {
                 </button>
               </form>
 
-              {/* Quick-Access Verified Demo Personas */}
-              <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #EAEAEA" }}>
+                            <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #EAEAEA" }}>
                 <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#888888", marginBottom: 10 }}>
                   Or 1-Click Sign In as Verified Institutional Persona:
                 </div>
@@ -480,13 +460,9 @@ export default function AccessGate() {
             </div>
           )}
 
-        {/* ============================================================
-            TAB 2: SIGN UP (Multi-Step Onboarding Questionnaire)
-           ============================================================ */}
-        {activeMode === "signup" && (
+                {activeMode === "signup" && (
           <div style={{ padding: "28px 32px" }}>
-            {/* Step Progress Bar */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, borderBottom: "1px solid #EAEAEA", paddingBottom: 16 }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, borderBottom: "1px solid #EAEAEA", paddingBottom: 16 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span
                   style={{
@@ -532,8 +508,7 @@ export default function AccessGate() {
               </div>
             </div>
 
-            {/* Step 1: Identity & Credentials */}
-            {onboardingStep === 1 && (
+                        {onboardingStep === 1 && (
               <div>
                 <p style={{ fontSize: 14, color: "#666666", marginBottom: 18 }}>
                   Tell us who you are. This information links your audit records and governance decisions.
@@ -640,8 +615,7 @@ export default function AccessGate() {
               </div>
             )}
 
-            {/* Step 2: Institution & Objective */}
-            {onboardingStep === 2 && (
+                        {onboardingStep === 2 && (
               <div>
                 <p style={{ fontSize: 14, color: "#666666", marginBottom: 18 }}>
                   Specify the financial institution you represent and what regulatory mandate you are executing.
@@ -753,8 +727,7 @@ export default function AccessGate() {
               </div>
             )}
 
-            {/* Step 3: Mandate Parameters & Risk Framework */}
-            {onboardingStep === 3 && (
+                        {onboardingStep === 3 && (
               <div>
                 <p style={{ fontSize: 14, color: "#666666", marginBottom: 18 }}>
                   Establish initial capital parameters and supervisory rules.
@@ -908,8 +881,7 @@ export default function AccessGate() {
               </div>
             )}
 
-            {/* Step 4: Confirm & Initialize Account */}
-            {onboardingStep === 4 && (
+                        {onboardingStep === 4 && (
               <div>
                 <p style={{ fontSize: 14, color: "#666666", marginBottom: 18 }}>
                   Verify your institutional onboarding parameters before creating your permanent profile in the database.
@@ -1004,10 +976,7 @@ export default function AccessGate() {
           </div>
         )}
 
-        {/* ============================================================
-            TAB 3: GUEST SANDBOX (No Login, Sample Data, In-Memory Only)
-           ============================================================ */}
-        {activeMode === "guest" && (
+                {activeMode === "guest" && (
           <div style={{ padding: "32px 32px" }}>
             <div style={{ textAlign: "center", marginBottom: 24 }}>
               <div
@@ -1033,8 +1002,7 @@ export default function AccessGate() {
               </p>
             </div>
 
-            {/* Crucial Notice regarding user's requirement */}
-            <div
+                        <div
               style={{
                 background: "#FAFAFA",
                 border: "1px solid #111111",
@@ -1080,8 +1048,7 @@ export default function AccessGate() {
         )}
       </div>
 
-        {/* Footer Branding */}
-        <div style={{ marginTop: 24, paddingBottom: 24, fontSize: 12, color: "#999999", letterSpacing: "0.04em" }}>
+                <div style={{ marginTop: 24, paddingBottom: 24, fontSize: 12, color: "#999999", letterSpacing: "0.04em" }}>
           CAPITAL GUARD RISK ENGINE • BASEL III REGULATORY COMPLIANCE SYSTEM
         </div>
       </div>

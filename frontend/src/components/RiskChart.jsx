@@ -2,10 +2,6 @@ import React from "react";
 import { formatPercentage } from "../utils/formatPercentage";
 import { Shield } from "lucide-react";
 
-/**
- * RiskChart — Monochrome progress bars for volatility and liquidity.
- * Breach state: crimson fill. Safe state: near-black fill.
- */
 export default function RiskChart({
   currentRisk  = 0.048,
   riskLimit    = 0.070,
@@ -23,8 +19,7 @@ export default function RiskChart({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, userSelect: "none" }}>
 
-      {/* ── Volatility Bar ── */}
-      <div>
+            <div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <Shield style={{ width: 13, height: 13, color: "#888888" }} />
@@ -40,8 +35,7 @@ export default function RiskChart({
           </div>
         </div>
 
-        {/* Track */}
-        <div style={{
+                <div style={{
           height: 10,
           background: "#F0F0F0",
           borderRadius: 999,
@@ -49,8 +43,7 @@ export default function RiskChart({
           overflow: "visible",
           border: "1px solid #EAEAEA"
         }}>
-          {/* Fill */}
-          <div style={{
+                    <div style={{
             height: "100%",
             borderRadius: 999,
             width: `${riskFillWidth}%`,
@@ -58,8 +51,7 @@ export default function RiskChart({
             transition: "width 0.4s ease, background 0.3s ease"
           }} />
 
-          {/* Limit marker line */}
-          <div style={{
+                    <div style={{
             position: "absolute",
             top: -3,
             bottom: -3,
@@ -81,8 +73,7 @@ export default function RiskChart({
         </div>
       </div>
 
-      {/* ── Liquidity Bar ── */}
-      <div>
+            <div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <span style={{ fontSize: 11, fontWeight: 500, color: "#555555" }}>LCR Liquidity Cushion</span>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>
@@ -108,8 +99,7 @@ export default function RiskChart({
         </div>
       </div>
 
-      {/* ── VaR Pill ── */}
-      <div style={{
+            <div style={{
         padding: "10px 14px",
         borderRadius: 3,
         border: "1px solid #EAEAEA",

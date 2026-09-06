@@ -67,8 +67,7 @@ export default function StressSimulator() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 40px", display: "flex", flexDirection: "column", gap: 24, userSelect: "none" }}>
 
-      {/* ── Header ── */}
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", color: "#111111" }}>
@@ -94,15 +93,13 @@ export default function StressSimulator() {
         </button>
       </div>
 
-      {/* ── Error ── */}
-      {error && (
+            {error && (
         <div style={{ padding: 12, borderRadius: 4, border: "1px solid #D32F2F", background: "rgba(211,47,47,0.05)", fontSize: 12, color: "#D32F2F" }}>
           <strong>Error:</strong> {error}
         </div>
       )}
 
-      {/* ── Scenario Selection Cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
         {SCENARIOS.map(sc => {
           const isSelected = selectedScenario === sc.id;
           return (
@@ -154,8 +151,7 @@ export default function StressSimulator() {
         })}
       </div>
 
-      {/* ── Stress Results ── */}
-      {simResult && (
+            {simResult && (
         <div className="cg-card" style={{ padding: 24 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 14, marginBottom: 14, borderBottom: "1px solid #EAEAEA" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -177,8 +173,7 @@ export default function StressSimulator() {
             </span>
           </div>
 
-          {/* Metric cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 16 }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 16 }}>
             <MetricCard
               title="Capital Drawdown"
               value={formatCurrency(simResult.shocked_portfolio?.capital_impact, portfolio.currency)}
@@ -213,8 +208,7 @@ export default function StressSimulator() {
             />
           </div>
 
-          {/* Insights box */}
-          <div style={{ padding: 14, borderRadius: 3, border: "1px solid #EAEAEA", background: "#FAFAFA", marginBottom: 16 }}>
+                    <div style={{ padding: 14, borderRadius: 3, border: "1px solid #EAEAEA", background: "#FAFAFA", marginBottom: 16 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: "#111111", marginBottom: 6 }}>
               Stress Test Rationale &amp; Insights
             </div>
@@ -224,8 +218,7 @@ export default function StressSimulator() {
             </p>
           </div>
 
-          {/* CTA */}
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <button onClick={() => setActiveTab("rebalance")} className="cg-btn-primary" style={{ fontSize: 12 }}>
               Review Defensive Rebalance Proposal
               <ArrowRight style={{ width: 13, height: 13 }} />

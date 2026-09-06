@@ -45,10 +45,8 @@ export default function LandingPage() {
         margin: "0 auto"
       }}
     >
-      {/* ── Hero Section ── */}
-      <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        {/* Compliance or Institutional Verification Badge */}
-        {isRegisteredUser ? (
+            <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+                {isRegisteredUser ? (
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <div
               style={{
@@ -120,8 +118,7 @@ export default function LandingPage() {
           </div>
         )}
 
-        {/* Main headline */}
-        <h1
+                <h1
           style={{
             fontSize: 40,
             fontWeight: 800,
@@ -138,8 +135,7 @@ export default function LandingPage() {
           </span>
         </h1>
 
-        {/* Subtitle */}
-        <p
+                <p
           style={{
             fontSize: 14,
             color: "#666666",
@@ -152,12 +148,10 @@ export default function LandingPage() {
             : "Formulate investment mandates, execute convex quadratic portfolio optimization, monitor live VaR headroom, and trigger cost-efficient rebalancing under severe macro stress."}
         </p>
 
-        {/* CTA row — User-Aware Actions */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, paddingTop: 8 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, paddingTop: 8 }}>
           {isRegisteredUser ? (
             <>
-              {/* Authenticated user: Prioritize their own portfolio */}
-              <button
+                            <button
                 id="landing-open-dashboard"
                 onClick={() => setActiveTab("overview")}
                 className="cg-btn-primary"
@@ -180,8 +174,7 @@ export default function LandingPage() {
             </>
           ) : (
             <>
-              {/* Guest / Unregistered user: Allow setup or sample test */}
-              <button
+                            <button
                 id="landing-start-mandate"
                 onClick={startSetup}
                 className="cg-btn-primary"
@@ -219,11 +212,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Horizontal Divider ── */}
-      <hr style={{ border: "none", borderTop: "1px solid #EAEAEA" }} />
+            <hr style={{ border: "none", borderTop: "1px solid #EAEAEA" }} />
 
-      {/* ── Workflow Pipeline ── */}
-      <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <div className="cg-section-title">End-to-End Institutional Workflow</div>
@@ -309,8 +300,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Three Institutional Pillars ── */}
-      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
+            <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
         {[
           {
             icon: Shield,
@@ -355,8 +345,7 @@ export default function LandingPage() {
         })}
       </section>
 
-      {/* ── Footer CTA: Active Verified Session Status or Guest Sign In ── */}
-      {currentUser ? (
+            {currentUser ? (
         <section
           style={{
             display: "flex",

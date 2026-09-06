@@ -90,8 +90,7 @@ export default function Sidebar() {
         zIndex: 20
       }}
     >
-      {/* ── Brand Header ── */}
-      <div>
+            <div>
         <div
           style={{
             padding: "16px 16px 14px",
@@ -142,10 +141,8 @@ export default function Sidebar() {
           </div>
         </div>
 
-        {/* ── Navigation ── */}
-        <nav style={{ padding: "10px 8px" }}>
-          {/* Section label */}
-          <div
+                <nav style={{ padding: "10px 8px" }}>
+                    <div
             style={{
               padding: "6px 10px 4px",
               fontSize: 9,
@@ -218,8 +215,7 @@ export default function Sidebar() {
                   </span>
                 </div>
 
-                {/* Badge — only for BREACH or LIVE on monitoring */}
-                {item.badge && !isLocked && (
+                                {item.badge && !isLocked && (
                   <span
                     style={{
                       fontSize: 8,
@@ -258,10 +254,8 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* ── Bottom Section: AI Copilot + Auth ── */}
-      <div style={{ padding: "10px 8px", borderTop: "1px solid #EAEAEA" }}>
-        {/* AI Copilot Button */}
-        <button
+            <div style={{ padding: "10px 8px", borderTop: "1px solid #EAEAEA" }}>
+                <button
           id="sidebar-copilot-btn"
           onClick={() => setIsCopilotOpen(true)}
           style={{
@@ -300,8 +294,7 @@ export default function Sidebar() {
           </span>
         </button>
 
-        {/* User Auth Section */}
-        {currentUser ? (
+                {currentUser ? (
           <div
             style={{
               padding: "10px 12px",
@@ -364,7 +357,6 @@ export default function Sidebar() {
             </button>
           </div>
         ) : (
-          /* Not logged in — clean sign-in CTA */
           <button
             id="sidebar-signin-btn"
             onClick={() => setCurrentUser(null)}

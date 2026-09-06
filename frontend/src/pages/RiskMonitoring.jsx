@@ -47,7 +47,6 @@ export default function RiskMonitoring() {
   const cvar95      = monitoringMetrics?.cvar_95 ?? (var95 * 1.25);
   const liqRatio    = monitoringMetrics?.liquidity_ratio ?? (portfolio.min_liquidity ? portfolio.min_liquidity / portfolio.total_capital : 0.20);
 
-  /* Small inline stat ─────────────────────── */
   const RiskStat = ({ label, value, subValue, isDanger, isNeutral }) => (
     <div className="cg-card" style={{ padding: 20 }}>
       <div className="cg-label" style={{ marginBottom: 8 }}>{label}</div>
@@ -67,8 +66,7 @@ export default function RiskMonitoring() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 40px", display: "flex", flexDirection: "column", gap: 24 }}>
 
-      {/* ── Page Header ── */}
-      <div style={{
+            <div style={{
         display: "flex", flexWrap: "wrap", alignItems: "center",
         justifyContent: "space-between", gap: 16,
         paddingBottom: 24, borderBottom: "1px solid #EAEAEA"
@@ -93,8 +91,7 @@ export default function RiskMonitoring() {
               {isBreach ? "MANDATE BREACH" : "MANDATE COMPLIANT"}
             </span>
 
-            {/* Live Streaming Indicator Pill */}
-            <div
+                        <div
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -125,8 +122,7 @@ export default function RiskMonitoring() {
           </p>
         </div>
 
-        {/* Shock & Stream controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <button
             onClick={() => setIsLiveStreaming(!isLiveStreaming)}
             className="cg-btn-secondary"
@@ -162,8 +158,7 @@ export default function RiskMonitoring() {
         </div>
       </div>
 
-      {/* ── Breach Alert Card ── */}
-      {isBreach && (
+            {isBreach && (
         <div style={{
           padding: 24,
           border: "1px solid #D32F2F",
@@ -217,8 +212,7 @@ export default function RiskMonitoring() {
         </div>
       )}
 
-      {/* ── 4 Metric Cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
         <RiskStat
           label="Current Volatility"
           value={formatPercentage(currentRisk)}
@@ -243,13 +237,10 @@ export default function RiskMonitoring() {
         />
       </div>
 
-      {/* ── Real-Time Company Profit & Loss (P&L) Section ── */}
-      <RealtimePnLTracker />
+            <RealtimePnLTracker />
 
-      {/* ── Charts: Gauge + Asset Contribution Table ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "5fr 7fr", gap: 16 }}>
-        {/* Volatility Gauge */}
-        <div className="cg-card" style={{ padding: 24 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "5fr 7fr", gap: 16 }}>
+                <div className="cg-card" style={{ padding: 24 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 14, marginBottom: 14, borderBottom: "1px solid #EAEAEA" }}>
             <div className="cg-section-title">Volatility Headroom Gauge</div>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#AAAAAA" }}>PILLAR II BUFFER</span>
@@ -263,15 +254,13 @@ export default function RiskMonitoring() {
           />
         </div>
 
-        {/* Asset Risk Contribution Table */}
-        <div className="cg-card" style={{ padding: 24 }}>
+                <div className="cg-card" style={{ padding: 24 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 14, marginBottom: 14, borderBottom: "1px solid #EAEAEA" }}>
             <div className="cg-section-title">Asset Marginal Risk Contribution</div>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#AAAAAA" }}>COVARIANCE DECOMP</span>
           </div>
 
-          {/* Table header */}
-          <div style={{
+                    <div style={{
             display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr",
             padding: "0 8px 8px",
             borderBottom: "1px solid #111111"
@@ -283,8 +272,7 @@ export default function RiskMonitoring() {
             ))}
           </div>
 
-          {/* Table rows */}
-          <div>
+                    <div>
             {Object.entries(portfolio.allocations || {}).map(([asset, weight]) => {
               const w = Number(weight) || 0;
               const assetVol = asset === "Equity" ? 0.152 : asset === "Gold" ? 0.11 : asset === "CorpBonds" ? 0.048 : 0.021;
@@ -324,8 +312,7 @@ export default function RiskMonitoring() {
             })}
           </div>
 
-          {/* Health score summary */}
-          <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", padding: "10px 8px", background: "#FAFAFA", borderRadius: 3, border: "1px solid #EAEAEA" }}>
+                    <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", padding: "10px 8px", background: "#FAFAFA", borderRadius: 3, border: "1px solid #EAEAEA" }}>
             <span style={{ fontSize: 11, color: "#666666" }}>Portfolio Health Score</span>
             <span style={{
               fontFamily: "var(--font-mono)",

@@ -65,7 +65,6 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
   const [engineStatus, setEngineStatus] = useState(null);
   const messagesEndRef = useRef(null);
 
-  // Quick prompt chips
   const SUGGESTED_PROMPTS = [
     "What does this website do?",
     "Why was Equity capped at 30%?",
@@ -75,7 +74,6 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
     "What prevents confidential bank data from leaking to the AI?"
   ];
 
-  // Load status & history on open
   useEffect(() => {
     if (isOpen) {
       loadStatusAndHistory();
@@ -99,7 +97,6 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
       if (status) setEngineStatus(status);
       if (hist && hist.messages) {
         if (hist.messages.length === 0) {
-          // Add default welcome message
           setMessages([
             {
               role: "assistant",
@@ -213,8 +210,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* HEADER */}
-        <div
+                <div
           style={{
             padding: "1rem 1.25rem",
             background: "#0D0D0D",
@@ -283,8 +279,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
             </div>
           </div>
 
-          {/* ENGINE STATUS & PRIVACY BADGE */}
-          <div
+                    <div
             style={{
               display: "flex",
               alignItems: "center",
@@ -319,8 +314,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
             </div>
           </div>
 
-          {/* ACTIVE PORTFOLIO CONTEXT STRIP */}
-          {portfolio && (
+                    {portfolio && (
             <div
               style={{
                 fontSize: "10px",
@@ -343,8 +337,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
           )}
         </div>
 
-        {/* CHAT MESSAGES STREAM */}
-        <div
+                <div
           style={{
             flex: 1,
             overflowY: "auto",
@@ -460,8 +453,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
           <div ref={messagesEndRef} />
         </div>
 
-        {/* SUGGESTED PROMPT CHIPS */}
-        <div
+                <div
           style={{
             padding: "0.5rem 1rem",
             background: "#FFFFFF",
@@ -506,8 +498,7 @@ export default function AICopilotDrawer({ isOpen, onClose, portfolio, macroIndic
           ))}
         </div>
 
-        {/* INPUT COMPOSER */}
-        <div
+                <div
           style={{
             padding: "0.85rem 1rem 1rem 1rem",
             background: "#FFFFFF",

@@ -29,7 +29,6 @@ export default function RebalanceEngine() {
     if (portfolio?.id && !rebalanceEval) {
       evaluateRebalanceAction(rebalanceCostBps, partialRatio);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [portfolio?.id, evaluateRebalanceAction]);
 
   if (!portfolio) {
@@ -73,8 +72,7 @@ export default function RebalanceEngine() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 40px", display: "flex", flexDirection: "column", gap: 24 }}>
 
-      {/* ── Header ── */}
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", color: "#111111" }}>
@@ -110,18 +108,15 @@ export default function RebalanceEngine() {
         </button>
       </div>
 
-      {/* ── Success Banner ── */}
-      {successMessage && (
+            {successMessage && (
         <div style={{ padding: 16, borderRadius: 4, border: "1px solid #D4D4D4", background: "#FAFAFA", display: "flex", alignItems: "center", gap: 10 }}>
           <CheckCircle2 style={{ width: 18, height: 18, color: "#111111", flexShrink: 0 }} />
           <span style={{ fontSize: 13, color: "#111111" }}>{successMessage}</span>
         </div>
       )}
 
-      {/* ── Parameter Controls ── */}
-      <div className="cg-card" style={{ padding: 24, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
-        {/* Cost bps slider */}
-        <div>
+            <div className="cg-card" style={{ padding: 24, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+                <div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
             <span style={{ fontSize: 12, fontWeight: 500, color: "#111111" }}>Transaction Cost & Slippage</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700, color: "#111111" }}>
@@ -146,8 +141,7 @@ export default function RebalanceEngine() {
           </div>
         </div>
 
-        {/* Partial ratio */}
-        <div>
+                <div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
             <span style={{ fontSize: 12, fontWeight: 500, color: "#111111" }}>Partial Execution Ratio</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700, color: "#111111" }}>
@@ -179,8 +173,7 @@ export default function RebalanceEngine() {
         </div>
       </div>
 
-      {/* ── 4 Impact Stats ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
         {[
           { label: "Current Risk (Stressed)", value: formatPercentage(currentRisk), sub: "Pre-rebalance", isDanger: isBreach },
           { label: "Post-Rebalance Risk", value: formatPercentage(postRisk), sub: `Ceiling: ${formatPercentage(portfolio.max_risk_limit || 0.07)}` },
@@ -201,8 +194,7 @@ export default function RebalanceEngine() {
         ))}
       </div>
 
-      {/* ── Recommendation Banner ── */}
-      <div style={{
+            <div style={{
         padding: "14px 20px",
         borderRadius: 4,
         border: `1px solid ${turnover < 0.001 ? "#16A34A" : isBeneficial ? "#111111" : "#D32F2F"}`,
@@ -229,8 +221,7 @@ export default function RebalanceEngine() {
         </div>
       </div>
 
-      {/* ── Allocation Comparison Table ── */}
-      <div className="cg-card" style={{ padding: 24 }}>
+            <div className="cg-card" style={{ padding: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: 14, marginBottom: 14, borderBottom: "1px solid #EAEAEA" }}>
           <div className="cg-section-title">Before vs. After Allocation</div>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#AAAAAA" }}>
@@ -238,8 +229,7 @@ export default function RebalanceEngine() {
           </span>
         </div>
 
-        {/* Table header */}
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr", padding: "0 8px 10px", borderBottom: "1px solid #111111" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr", padding: "0 8px 10px", borderBottom: "1px solid #111111" }}>
           {["Asset Class", "Current", "Target", "Δ Shift", "Trade Notional"].map((h, i) => (
             <div key={h} style={{
               fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.06em",
@@ -310,8 +300,7 @@ export default function RebalanceEngine() {
         })()}
       </div>
 
-      {/* ── Decision Box ── */}
-      <div className="cg-card" style={{ padding: 24 }}>
+            <div className="cg-card" style={{ padding: 24 }}>
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: "#111111" }}>Investment Committee Decision Rationale</div>
           <div style={{ fontSize: 11, color: "#666666", marginTop: 3 }}>

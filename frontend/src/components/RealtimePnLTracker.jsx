@@ -49,7 +49,6 @@ export default function RealtimePnLTracker() {
   const totalCapital = portfolio.total_capital || 1000000000;
   const currentTotalVal = totalCapital + pnl.sessionPnlAmount;
 
-  /* Custom Tooltip for Bar Chart */
   const BarTooltip = ({ active, payload }) => {
     if (!active || !payload || !payload.length) return null;
     const data = payload[0].payload;
@@ -77,7 +76,6 @@ export default function RealtimePnLTracker() {
     );
   };
 
-  /* Custom Tooltip for Scatter Plot */
   const ScatterTooltip = ({ active, payload }) => {
     if (!active || !payload || !payload.length) return null;
     const data = payload[0].payload;
@@ -108,7 +106,6 @@ export default function RealtimePnLTracker() {
     );
   };
 
-  /* Format Scatter Data */
   const scatterData = (pnl.assetBreakdown || []).map((item) => ({
     name: item.asset,
     x: item.risk,
@@ -118,7 +115,6 @@ export default function RealtimePnLTracker() {
     color: item.pnlAmount >= 0 ? "#16A34A" : "#DC2626"
   }));
 
-  // Add overall company portfolio point to scatter plot
   const portfolioScatterPoint = {
     name: "★ Company Portfolio",
     x: (portfolio.current_risk || portfolio.expected_risk || 0.052) * 100,
@@ -131,8 +127,7 @@ export default function RealtimePnLTracker() {
 
   return (
     <div className="cg-card" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
-      {/* ── Top Header & View Controls ── */}
-      <div
+            <div
         style={{
           display: "flex",
           flexWrap: "wrap",
@@ -194,8 +189,7 @@ export default function RealtimePnLTracker() {
           </p>
         </div>
 
-        {/* View Toggle Tabs */}
-        <div
+                <div
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -277,10 +271,8 @@ export default function RealtimePnLTracker() {
         </div>
       </div>
 
-      {/* ── Key Financial P&L Cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
-        {/* Net Unrealized P&L */}
-        <div
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+                <div
           style={{
             padding: "14px 16px",
             background: isPositive ? "rgba(22, 163, 74, 0.04)" : "rgba(220, 38, 38, 0.04)",
@@ -311,8 +303,7 @@ export default function RealtimePnLTracker() {
           </div>
         </div>
 
-        {/* Total Portfolio Value */}
-        <div style={{ padding: "14px 16px", background: "#FAFAFA", border: "1px solid #EAEAEA", borderRadius: 4 }}>
+                <div style={{ padding: "14px 16px", background: "#FAFAFA", border: "1px solid #EAEAEA", borderRadius: 4 }}>
           <div style={{ fontSize: 11, color: "#71717A", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Total Capital Value
           </div>
@@ -324,8 +315,7 @@ export default function RealtimePnLTracker() {
           </div>
         </div>
 
-        {/* Session Peak (High) */}
-        <div style={{ padding: "14px 16px", background: "#FAFAFA", border: "1px solid #EAEAEA", borderRadius: 4 }}>
+                <div style={{ padding: "14px 16px", background: "#FAFAFA", border: "1px solid #EAEAEA", borderRadius: 4 }}>
           <div style={{ fontSize: 11, color: "#71717A", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Session High Peak
           </div>
@@ -337,8 +327,7 @@ export default function RealtimePnLTracker() {
           </div>
         </div>
 
-        {/* Session Low */}
-        <div style={{ padding: "14px 16px", background: "#FAFAFA", border: "1px solid #EAEAEA", borderRadius: 4 }}>
+                <div style={{ padding: "14px 16px", background: "#FAFAFA", border: "1px solid #EAEAEA", borderRadius: 4 }}>
           <div style={{ fontSize: 11, color: "#71717A", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Session Low / Drawdown
           </div>
@@ -351,8 +340,7 @@ export default function RealtimePnLTracker() {
         </div>
       </div>
 
-      {/* ── Chart Container ── */}
-      <div style={{ height: 280, width: "100%", marginTop: 4 }}>
+            <div style={{ height: 280, width: "100%", marginTop: 4 }}>
         {chartMode === "bar" && (
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -475,8 +463,7 @@ export default function RealtimePnLTracker() {
         )}
       </div>
 
-      {/* ── Bottom Explanatory Strip ── */}
-      <div
+            <div
         style={{
           display: "flex",
           flexWrap: "wrap",

@@ -13,7 +13,6 @@ import {
   ArrowLeft, ArrowRight, Zap, CheckCircle2, Cpu
 } from "lucide-react";
 
-/* ── Shared input style ────────────────────────────────── */
 const inputStyle = {
   width: "100%",
   padding: "9px 12px",
@@ -83,7 +82,6 @@ export default function OptimizationSetup() {
     try { await runOptimization(); } catch (err) { console.error(err); }
   };
 
-  /* ── Step config ── */
   const steps = [
     { step: 1, title: "Organization & Capital", icon: Landmark },
     { step: 2, title: "Objective & Horizon",    icon: Target },
@@ -94,8 +92,7 @@ export default function OptimizationSetup() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 40px", display: "flex", flexDirection: "column", gap: 24, userSelect: "none" }}>
 
-      {/* ── Header ── */}
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "space-between", gap: 16, paddingBottom: 24, borderBottom: "1px solid #EAEAEA" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.02em", color: "#111111" }}>
@@ -116,8 +113,7 @@ export default function OptimizationSetup() {
         </button>
       </div>
 
-      {/* ── Step Indicator ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
         {steps.map((item) => {
           const isDone    = setupStep > item.step;
           const isCurrent = setupStep === item.step;
@@ -139,8 +135,7 @@ export default function OptimizationSetup() {
                 transition: "all 0.12s ease"
               }}
             >
-              {/* Step circle */}
-              <div style={{
+                            <div style={{
                 width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 background: isCurrent ? "#FFFFFF" : isDone ? "#111111" : "#F0F0F0",
@@ -164,21 +159,17 @@ export default function OptimizationSetup() {
         })}
       </div>
 
-      {/* ── Main Form + Live Summary ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "8fr 4fr", gap: 16, alignItems: "start" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "8fr 4fr", gap: 16, alignItems: "start" }}>
 
-        {/* ── Left: Form Panel ── */}
-        <div className="cg-card" style={{ padding: 28, display: "flex", flexDirection: "column", gap: 20 }}>
+                <div className="cg-card" style={{ padding: 28, display: "flex", flexDirection: "column", gap: 20 }}>
 
-          {/* Error Banner */}
-          {error && (
+                    {error && (
             <div style={{ padding: 12, borderRadius: 4, border: "1px solid #D32F2F", background: "rgba(211,47,47,0.05)", fontSize: 12, color: "#D32F2F" }}>
               <strong>Optimization Error:</strong> {error}
             </div>
           )}
 
-          {/* ── STEP 1: Organization & Capital ── */}
-          {setupStep === 1 && (
+                    {setupStep === 1 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#111111", letterSpacing: "-0.01em" }}>
@@ -236,8 +227,7 @@ export default function OptimizationSetup() {
                   onBlur={e => { e.target.style.borderColor = "#D4D4D4"; }}
                 />
 
-                {/* Capital Presets */}
-                <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                                <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
                   {[
                     { label: "₹50 Cr",     val: 500000000 },
                     { label: "₹100 Cr",    val: 1000000000 },
@@ -267,8 +257,7 @@ export default function OptimizationSetup() {
             </div>
           )}
 
-          {/* ── STEP 2: Objective & Horizon ── */}
-          {setupStep === 2 && (
+                    {setupStep === 2 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#111111" }}>
@@ -279,8 +268,7 @@ export default function OptimizationSetup() {
                 </p>
               </div>
 
-              {/* Objective cards */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
                 {OBJECTIVE_OPTIONS.map(obj => {
                   const isSelected = formData.investment_objective === obj.id;
                   return (
@@ -319,8 +307,7 @@ export default function OptimizationSetup() {
                 })}
               </div>
 
-              {/* Horizon */}
-              <div>
+                            <div>
                 <label style={labelStyle}>Investment Duration Mandate</label>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
                   {[
@@ -354,8 +341,7 @@ export default function OptimizationSetup() {
             </div>
           )}
 
-          {/* ── STEP 3: Asset Universe ── */}
-          {setupStep === 3 && (
+                    {setupStep === 3 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <div>
@@ -392,8 +378,7 @@ export default function OptimizationSetup() {
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-                        {/* Checkbox */}
-                        <div style={{
+                                                <div style={{
                           width: 18, height: 18, borderRadius: 3, flexShrink: 0,
                           border: `1px solid ${isChecked ? "#FFFFFF" : "#D4D4D4"}`,
                           background: isChecked ? "#FFFFFF" : "#FAFAFA",
@@ -424,8 +409,7 @@ export default function OptimizationSetup() {
                         </div>
                       </div>
 
-                      {/* Stats */}
-                      <div style={{ display: "flex", gap: 20, flexShrink: 0, fontFamily: "var(--font-mono)" }}>
+                                            <div style={{ display: "flex", gap: 20, flexShrink: 0, fontFamily: "var(--font-mono)" }}>
                         <div style={{ textAlign: "right" }}>
                           <div style={{ fontSize: 9, letterSpacing: "0.06em", textTransform: "uppercase", color: isChecked ? "#888888" : "#AAAAAA" }}>Exp. Return</div>
                           <div style={{ fontSize: 12, fontWeight: 700, color: isChecked ? "#FFFFFF" : "#111111" }}>
@@ -446,8 +430,7 @@ export default function OptimizationSetup() {
             </div>
           )}
 
-          {/* ── STEP 4: Risk & Constraints ── */}
-          {setupStep === 4 && (
+                    {setupStep === 4 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: "#111111" }}>
@@ -459,8 +442,7 @@ export default function OptimizationSetup() {
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                {/* Slider control component */}
-                {[
+                                {[
                   {
                     label: "Portfolio Volatility Ceiling",
                     value: `${(formData.max_risk_limit * 100).toFixed(2)}%`,
@@ -520,8 +502,7 @@ export default function OptimizationSetup() {
             </div>
           )}
 
-          {/* ── Nav Buttons ── */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 16, borderTop: "1px solid #EAEAEA", marginTop: 4 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 16, borderTop: "1px solid #EAEAEA", marginTop: 4 }}>
             {setupStep > 1 ? (
               <button type="button" onClick={() => setSetupStep(setupStep - 1)} className="cg-btn-secondary" style={{ fontSize: 12 }}>
                 <ArrowLeft style={{ width: 13, height: 13 }} />
@@ -547,8 +528,7 @@ export default function OptimizationSetup() {
           </div>
         </div>
 
-        {/* ── Right: Live Mandate Summary ── */}
-        <div className="cg-card" style={{ padding: 20, position: "sticky", top: 24 }}>
+                <div className="cg-card" style={{ padding: 20, position: "sticky", top: 24 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 14, marginBottom: 14, borderBottom: "1px solid #EAEAEA" }}>
             <div className="cg-section-title">Live Mandate Draft</div>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, fontWeight: 700, letterSpacing: "0.08em", padding: "2px 5px", border: "1px solid #D4D4D4", borderRadius: 2, color: "#555555" }}>
@@ -556,8 +536,7 @@ export default function OptimizationSetup() {
             </span>
           </div>
 
-          {/* Summary rows */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
             {[
               { label: "Institution",    value: formData.org_name },
               { label: "Entity Tier",    value: formData.org_type },
@@ -577,8 +556,7 @@ export default function OptimizationSetup() {
             ))}
           </div>
 
-          {/* Solver info */}
-          <div style={{ marginTop: 14, padding: 12, borderRadius: 3, border: "1px solid #EAEAEA", background: "#FAFAFA" }}>
+                    <div style={{ marginTop: 14, padding: 12, borderRadius: 3, border: "1px solid #EAEAEA", background: "#FAFAFA" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
               <Cpu style={{ width: 12, height: 12, color: "#111111" }} />
               <span style={{ fontSize: 11, fontWeight: 700, color: "#111111" }}>Conic Interior-Point Solver</span>
@@ -588,8 +566,7 @@ export default function OptimizationSetup() {
             </p>
           </div>
 
-          {/* Step shortcut to run */}
-          {setupStep < 4 && (
+                    {setupStep < 4 && (
             <button
               type="button"
               onClick={() => setSetupStep(4)}

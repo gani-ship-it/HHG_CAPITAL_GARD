@@ -3,9 +3,6 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 import { formatCurrency } from "../utils/formatCurrency";
 import { formatPercentage } from "../utils/formatPercentage";
 
-/* DESIGN SYSTEM: Monochrome shades of gray for allocation segments.
-   Per DESIGN_SYSTEM.md § 5: "Use varying shades of gray...
-   Use a thin 2px white stroke between slices for crisp separation." */
 const ASSET_SHADES = {
   GovBonds: "#111111",  // darkest — largest/safest position
   CorpBonds: "#444444",
@@ -74,8 +71,7 @@ export default function AllocationChart({
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "5fr 7fr", gap: 24, alignItems: "center" }}>
-      {/* Donut */}
-      <div style={{ height: 220, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ height: 220, position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Tooltip content={<CustomTooltip />} />
@@ -95,8 +91,7 @@ export default function AllocationChart({
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Center label */}
-        <div style={{
+                <div style={{
           position: "absolute", inset: 0,
           display: "flex", flexDirection: "column",
           alignItems: "center", justifyContent: "center",
@@ -114,11 +109,9 @@ export default function AllocationChart({
         </div>
       </div>
 
-      {/* Breakdown table */}
-      {showTable && (
+            {showTable && (
         <div>
-          {/* Header */}
-          <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr", padding: "0 8px 8px", borderBottom: "1px solid #111111" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "3fr 1fr 1fr", padding: "0 8px 8px", borderBottom: "1px solid #111111" }}>
             {["Asset Class", "Weight", "Capital"].map((h, i) => (
               <div key={h} style={{
                 fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700,
@@ -128,8 +121,7 @@ export default function AllocationChart({
             ))}
           </div>
 
-          {/* Rows */}
-          {chartData.map((item) => {
+                    {chartData.map((item) => {
             let actionBadge = { text: "• HOLD", bg: "#F4F4F5", color: "#555555" };
             if (item.keyName === "Equity" && item.value >= 0.30) {
               actionBadge = { text: "MAX CAP", bg: "#111111", color: "#FFFFFF" };

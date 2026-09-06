@@ -16,8 +16,7 @@ export default function PortfolioContextStrip() {
 
   return (
     <div className="bg-white border-b border-zinc-200 px-6 py-2.5 flex flex-wrap items-center justify-between gap-4 select-none">
-      {/* Left: Organization & Entity Pill */}
-      <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5">
         <div className="w-6 h-6 rounded bg-zinc-900 text-white flex items-center justify-center">
           <Landmark className="w-3.5 h-3.5" />
         </div>
@@ -32,8 +31,7 @@ export default function PortfolioContextStrip() {
         </div>
       </div>
 
-      {/* Middle: Key Baseline Mandate Parameters */}
-      <div className="flex items-center gap-6 text-xs">
+            <div className="flex items-center gap-6 text-xs">
         <div className="flex items-center gap-1.5">
           <Briefcase className="w-3.5 h-3.5 text-zinc-400" />
           <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-medium">Capital:</span>
@@ -63,8 +61,7 @@ export default function PortfolioContextStrip() {
         </div>
       </div>
 
-      {/* Right: Actions */}
-      <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
         <button
           onClick={() => refreshMonitoring()}
           disabled={loading}

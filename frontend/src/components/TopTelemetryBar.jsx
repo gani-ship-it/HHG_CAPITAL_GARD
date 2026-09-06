@@ -33,10 +33,8 @@ export default function TopTelemetryBar() {
         zIndex: 10
       }}
     >
-      {/* ── Left: Engine Status + FRED Macro Ticker ── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, overflow: "hidden" }}>
-        {/* Engine Status Pill */}
-        <div
+            <div style={{ display: "flex", alignItems: "center", gap: 16, overflow: "hidden" }}>
+                <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -97,8 +95,7 @@ export default function TopTelemetryBar() {
           </span>
         </div>
 
-        {/* FRED Macro Pills */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, overflow: "hidden" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, overflow: "hidden" }}>
           <MacroPill label="US 10Y" value={yield10Y} />
           <MacroPill label="FED FUNDS" value={fedFunds} />
           <MacroPill
@@ -111,10 +108,8 @@ export default function TopTelemetryBar() {
         </div>
       </div>
 
-      {/* ── Right: Auth + AI Copilot ── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-        {/* AI Copilot trigger */}
-        <button
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                <button
           id="topbar-copilot-btn"
           onClick={() => setIsCopilotOpen(true)}
           style={{
@@ -135,8 +130,7 @@ export default function TopTelemetryBar() {
           <span style={{ fontSize: 11, fontWeight: 500, color: "#111111" }}>AI Copilot</span>
         </button>
 
-        {/* Auth: show user name or "Sign In" */}
-        <button
+                <button
           id="topbar-auth-btn"
           onClick={() => setIsAuthModalOpen(true)}
           style={{
@@ -170,7 +164,6 @@ export default function TopTelemetryBar() {
   );
 }
 
-/* Small reusable macro data pill */
 function MacroPill({ label, value, negative, icon }) {
   return (
     <div

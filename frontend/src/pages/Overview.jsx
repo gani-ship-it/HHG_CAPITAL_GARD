@@ -8,7 +8,6 @@ import RiskChart from "../components/RiskChart";
 import DecisionExplanation from "../components/DecisionExplanation";
 import { TrendingUp, Shield, Activity, Layers, ArrowRight, Zap } from "lucide-react";
 
-/* ── Small stat card — monochrome ─────────────────────────────── */
 function StatCard({ label, value, sub, delta, isDanger }) {
   return (
     <div className="cg-card" style={{ padding: 20 }}>
@@ -90,8 +89,7 @@ export default function Overview() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 40px", display: "flex", flexDirection: "column", gap: 28 }}>
 
-      {/* ── Page Header ── */}
-      <div
+            <div
         style={{
           display: "flex",
           flexWrap: "wrap",
@@ -148,8 +146,7 @@ export default function Overview() {
         </div>
       </div>
 
-      {/* ── Breach Alert Banner ── */}
-      {isBreach && (
+            {isBreach && (
         <div
           style={{
             padding: "16px 20px",
@@ -180,8 +177,7 @@ export default function Overview() {
         </div>
       )}
 
-      {/* ── 4 Stat Cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
         <StatCard
           label="Expected Annual Return"
           value={formatPercentage(expectedReturn)}
@@ -213,10 +209,8 @@ export default function Overview() {
         />
       </div>
 
-      {/* ── Charts Grid ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "7fr 5fr", gap: 16 }}>
-        {/* Allocation Donut */}
-        <div className="cg-card" style={{ padding: 24 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "7fr 5fr", gap: 16 }}>
+                <div className="cg-card" style={{ padding: 24 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 16, marginBottom: 16, borderBottom: "1px solid #EAEAEA" }}>
             <div className="cg-section-title">Optimal Asset Allocation</div>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#AAAAAA" }}>CLARABEL CONIC QP</span>
@@ -234,8 +228,7 @@ export default function Overview() {
           />
         </div>
 
-        {/* Risk Gauge */}
-        <div className="cg-card" style={{ padding: 24 }}>
+                <div className="cg-card" style={{ padding: 24 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 16, marginBottom: 16, borderBottom: "1px solid #EAEAEA" }}>
             <div className="cg-section-title">Mandate Headroom &amp; VaR</div>
             <span
@@ -263,8 +256,7 @@ export default function Overview() {
             minLiquidity={portfolio.min_liquidity ? portfolio.min_liquidity / portfolio.total_capital : 0.15}
           />
 
-          {/* Solver status mini-table */}
-          <div style={{ marginTop: 16, padding: 14, borderRadius: 3, border: "1px solid #EAEAEA", background: "#FAFAFA" }}>
+                    <div style={{ marginTop: 16, padding: 14, borderRadius: 3, border: "1px solid #EAEAEA", background: "#FAFAFA" }}>
             {[
               { label: "Optimization Status", value: "OPTIMAL (1.2e-8)" },
               { label: "Risk Parity Efficiency", value: "99.4% Frontier Match" }
@@ -278,8 +270,7 @@ export default function Overview() {
         </div>
       </div>
 
-      {/* ── Decision Explanation ── */}
-      <DecisionExplanation
+            <DecisionExplanation
         objective={portfolio.investment_objective}
         optimizationData={optimizationData}
         constraints={portfolio.constraints}
