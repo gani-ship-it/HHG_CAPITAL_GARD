@@ -78,6 +78,23 @@ export function PortfolioProvider({ children }) {
     return () => { mounted = false; };
   }, []);
 
+  // Synchronize user profile with form data on mount / user change
+  useEffect(() => {
+    if (currentUser && !currentUser.isGuest) {
+      setFormData((prev) => ({
+        ...prev,
+        org_name: currentUser.org_name || prev.org_name,
+        org_type: currentUser.org_type || prev.org_type,
+        total_capital: currentUser.initial_capital || prev.total_capital,
+        currency: currentUser.currency || prev.currency,
+        investment_horizon_years: currentUser.investment_horizon?.includes("5") ? 5 : (currentUser.investment_horizon?.includes("1") ? 1 : 3),
+        risk_preference: currentUser.risk_tolerance || prev.risk_preference,
+        min_liquidity: (currentUser.initial_capital || prev.total_capital) * 0.20,
+        investment_objective: currentUser.purpose?.includes("Capital") ? "Capital Preservation" : (currentUser.purpose?.includes("Growth") ? "Growth" : "Balanced Growth")
+      }));
+    }
+  }, [currentUser]);
+
   // Update Form Data helper
   const updateFormData = useCallback((patch) => {
     setFormData((prev) => ({ ...prev, ...patch }));

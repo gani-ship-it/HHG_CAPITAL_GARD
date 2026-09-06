@@ -44,8 +44,12 @@ export default function OptimizationSetup() {
     runOptimization,
     loading,
     error,
-    setActiveTab
+    setActiveTab,
+    currentUser,
+    portfolio
   } = usePortfolio();
+
+  const isRegisteredUser = currentUser && !currentUser.isGuest;
 
   const handleAssetToggle = (assetId) => {
     const current = formData.selected_assets || [];
@@ -60,7 +64,19 @@ export default function OptimizationSetup() {
     }
   };
 
-  const autofillDemo = () => updateFormData(DEMO_PRESET_BANK);
+  const autofillDemo = () => {
+    if (isRegisteredUser) {
+      updateFormData({
+        ...DEMO_PRESET_BANK,
+        org_name: portfolio?.org_name || currentUser.org_name || formData.org_name,
+        org_type: portfolio?.org_type || currentUser.org_type || formData.org_type,
+        total_capital: portfolio?.total_capital || currentUser.initial_capital || formData.total_capital,
+        currency: portfolio?.currency || currentUser.currency || formData.currency
+      });
+    } else {
+      updateFormData(DEMO_PRESET_BANK);
+    }
+  };
 
   const handleFinalSubmit = async (e) => {
     e?.preventDefault();
@@ -96,7 +112,7 @@ export default function OptimizationSetup() {
 
         <button onClick={autofillDemo} type="button" className="cg-btn-secondary" style={{ fontSize: 12 }}>
           <Zap style={{ width: 13, height: 13 }} />
-          Autofill ₹100 Cr Demo
+          {isRegisteredUser ? "Autofill Regulatory Defaults" : "Autofill Sample Preset"}
         </button>
       </div>
 

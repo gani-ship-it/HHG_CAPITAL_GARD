@@ -1,5 +1,6 @@
 import React from "react";
 import { usePortfolio } from "../state/portfolioStore";
+import { formatCurrency } from "../utils/formatCurrency";
 import {
   Shield,
   Sliders,
@@ -9,11 +10,27 @@ import {
   GitCompare,
   History,
   Cpu,
-  Lock
+  Lock,
+  Building,
+  CheckCircle2
 } from "lucide-react";
 
 export default function LandingPage() {
-  const { startSetup, loadDemoPreset, loading, isInitialized, setActiveTab, setIsAuthModalOpen } = usePortfolio();
+  const {
+    startSetup,
+    loadDemoPreset,
+    loading,
+    isInitialized,
+    setActiveTab,
+    setIsAuthModalOpen,
+    currentUser,
+    portfolio
+  } = usePortfolio();
+
+  const isRegisteredUser = currentUser && !currentUser.isGuest;
+  const currentCapital = portfolio?.total_capital || currentUser?.initial_capital;
+  const currentOrg = portfolio?.org_name || currentUser?.org_name || "Institutional Client";
+  const currentRole = currentUser?.role || "Risk Officer";
 
   return (
     <div
@@ -30,30 +47,78 @@ export default function LandingPage() {
     >
       {/* ── Hero Section ── */}
       <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        {/* Compliance badge */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "#111111",
-              display: "inline-block"
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 10,
-              fontWeight: 600,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "#666666"
-            }}
-          >
-            Basel III Compliance · Clarabel Conic QP · Sovereign Risk OS
-          </span>
-        </div>
+        {/* Compliance or Institutional Verification Badge */}
+        {isRegisteredUser ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                background: "#111111",
+                color: "#FFFFFF",
+                padding: "4px 12px",
+                borderRadius: 4,
+                fontSize: 11,
+                fontFamily: "var(--font-mono)",
+                letterSpacing: "0.06em",
+                fontWeight: 600
+              }}
+            >
+              <Building style={{ width: 12, height: 12 }} />
+              <span>{currentOrg.toUpperCase()}</span>
+            </div>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "#F4F4F5",
+                border: "1px solid #E4E4E7",
+                padding: "4px 10px",
+                borderRadius: 4,
+                fontSize: 11,
+                color: "#52525B",
+                fontFamily: "var(--font-mono)"
+              }}
+            >
+              <CheckCircle2 style={{ width: 12, height: 12, color: "#16A34A" }} />
+              <span>AUTHENTICATED INSTITUTIONAL SESSION</span>
+              {currentCapital && (
+                <>
+                  <span style={{ color: "#A1A1AA" }}>•</span>
+                  <span style={{ color: "#111111", fontWeight: 700 }}>
+                    CAPITAL: {formatCurrency(currentCapital, portfolio?.currency || currentUser?.currency || "INR")}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#111111",
+                display: "inline-block"
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#666666"
+              }}
+            >
+              Basel III Compliance · Clarabel Conic QP · Sovereign Risk OS
+            </span>
+          </div>
+        )}
 
         {/* Main headline */}
         <h1
@@ -79,47 +144,77 @@ export default function LandingPage() {
             fontSize: 14,
             color: "#666666",
             lineHeight: 1.65,
-            maxWidth: 560
+            maxWidth: 580
           }}
         >
-          Formulate investment mandates, execute convex quadratic portfolio optimization,
-          monitor live VaR headroom, and trigger cost-efficient rebalancing under severe macro stress.
+          {isRegisteredUser
+            ? `Welcome, ${currentUser.full_name || currentUser.email}. Manage your institution's active capital (${formatCurrency(currentCapital, portfolio?.currency || currentUser?.currency || "INR")}), monitor live risk limits, and run convex quadratic optimizations under Basel III capital defense constraints.`
+            : "Formulate investment mandates, execute convex quadratic portfolio optimization, monitor live VaR headroom, and trigger cost-efficient rebalancing under severe macro stress."}
         </p>
 
-        {/* CTA row */}
+        {/* CTA row — User-Aware Actions */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, paddingTop: 8 }}>
-          <button
-            id="landing-start-mandate"
-            onClick={startSetup}
-            className="cg-btn-primary"
-            style={{ fontSize: 13 }}
-          >
-            <Sliders style={{ width: 14, height: 14 }} />
-            Configure New Mandate
-            <ArrowRight style={{ width: 14, height: 14 }} />
-          </button>
+          {isRegisteredUser ? (
+            <>
+              {/* Authenticated user: Prioritize their own portfolio */}
+              <button
+                id="landing-open-dashboard"
+                onClick={() => setActiveTab("overview")}
+                className="cg-btn-primary"
+                style={{ fontSize: 13 }}
+              >
+                <Activity style={{ width: 14, height: 14 }} />
+                Open Portfolio Dashboard
+                <ArrowRight style={{ width: 14, height: 14 }} />
+              </button>
 
-          <button
-            id="landing-demo-preset"
-            onClick={loadDemoPreset}
-            disabled={loading}
-            className="cg-btn-secondary"
-            style={{ fontSize: 13 }}
-          >
-            <Zap style={{ width: 14, height: 14 }} />
-            {loading ? "Loading…" : "Load ₹100 Cr Demo"}
-          </button>
+              <button
+                id="landing-reconfigure-mandate"
+                onClick={startSetup}
+                className="cg-btn-secondary"
+                style={{ fontSize: 13 }}
+              >
+                <Sliders style={{ width: 14, height: 14 }} />
+                Adjust Mandate &amp; Constraints
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Guest / Unregistered user: Allow setup or sample test */}
+              <button
+                id="landing-start-mandate"
+                onClick={startSetup}
+                className="cg-btn-primary"
+                style={{ fontSize: 13 }}
+              >
+                <Sliders style={{ width: 14, height: 14 }} />
+                Configure New Mandate
+                <ArrowRight style={{ width: 14, height: 14 }} />
+              </button>
 
-          {isInitialized && (
-            <button
-              id="landing-return-dashboard"
-              onClick={() => setActiveTab("overview")}
-              className="cg-btn-secondary"
-              style={{ fontSize: 13 }}
-            >
-              Return to Dashboard
-              <ArrowRight style={{ width: 14, height: 14 }} />
-            </button>
+              <button
+                id="landing-demo-preset"
+                onClick={loadDemoPreset}
+                disabled={loading}
+                className="cg-btn-secondary"
+                style={{ fontSize: 13 }}
+              >
+                <Zap style={{ width: 14, height: 14 }} />
+                {loading ? "Loading…" : "Explore Demo Sandbox (₹100 Cr)"}
+              </button>
+
+              {isInitialized && (
+                <button
+                  id="landing-return-dashboard"
+                  onClick={() => setActiveTab("overview")}
+                  className="cg-btn-secondary"
+                  style={{ fontSize: 13 }}
+                >
+                  Return to Dashboard
+                  <ArrowRight style={{ width: 14, height: 14 }} />
+                </button>
+              )}
+            </>
           )}
         </div>
       </section>
